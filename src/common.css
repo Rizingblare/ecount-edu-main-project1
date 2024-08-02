@@ -1,0 +1,28 @@
+.container {
+    width: 700px;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    background-color: rgb(240, 240, 240);
+    padding: 0.25rem;
+}
+
+.rowDate {
+    text-align: right;
+    display: grid;
+    grid-template-columns: 4fr 1fr 4fr;
+}
+
+.title {
+    font-size: large;
+    font-family: monospace;
+    background-color: rgba(191, 154, 255, 0.122);
+    padding: 0.25rem;
+}
+
+.tb {
+    border: 1px solid black;
+    width: 700px;
+}
