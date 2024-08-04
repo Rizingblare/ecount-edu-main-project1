@@ -1,23 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     allformsPreventSubmit();
+    loadParams();
     addItemEvent();
 })
 
-function saveToLocalStorage(tableData) {
+function loadParams() {
+    const params = new URLSearchParams(window.location.search);
+    const itemCode = params.get('item-code');
+    const itemName = params.get('item-name');
 
-}
+    const itemCodeInput = document.querySelector('input[name="item-code"]');
+    itemCodeInput.value = itemCode;
 
-function loadFromLocalStorage() {
-
-}
-
-function allformsPreventSubmit() {
-    const allForms = document.getElementsByTagName('form');
-    for (const form of allForms) {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-        })
-    }
+    const itemNameInput = document.querySelector('input[name="item-name"]');
+    itemNameInput.value = itemName;
 }
 
 function addItemEvent() {
@@ -33,4 +29,13 @@ function addItem() {
     window.localStorage.setItem(itemCode);
 
     console.log(itemCode, itemName);
+}
+
+
+function saveToLocalStorage(tableData) {
+
+}
+
+function loadFromLocalStorage() {
+    
 }
