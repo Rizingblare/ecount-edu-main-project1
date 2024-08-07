@@ -11,23 +11,28 @@
         <form action="#" method="get">
             <div class="row">
                 <label>전표일자</label>
-                <div class="rowDate"><input type="date" id="start-date" name="start-date">
+                <div class="rowDate">
+                    <input type="date" id="start-date" name="start-date">
                     <span style="text-align: center;">~</span>
-                    <input type="date" id="end-date" name="end-date"></div>
+                    <input type="date" id="end-date" name="end-date">
+                </div>
             </div>
             <div class="row">
-                <label for="item">품목</label>
-                <input type="text" id="item" name="item" placeholder="품목">
+                <label for="sale-item">품목</label>
+                <button id="search-item-btn">🔍</button>
+                <div id="selected-items-container">
+                    <input type="text" id="sale-item" name="sale-item" placeholder="품목">
+                </div>
             </div>
             <div class="row">
-                <label for="item">적요</label>
-                <input type="text" id="purpose" name="purpose" placeholder="적요">
+                <label for="sale-purpose">적요</label>
+                <input type="text" id="sale-purpose" name="sale-purpose" placeholder="적요">
             </div>
-            <button type="submit">검색</button>
+            <button id="search-btn" class="search-btn">검색</button>
         </form>
-        <div class="pagination" style="margin: 2rem 0 0 0;">
-            <button>이전</button>
-            <button>다음</button>
+        <div class="pagination">
+            <button id="prev-btn">이전</button>
+            <button id="next-btn">다음</button>
         </div>
         <table class="tb">
             <thead>
@@ -41,31 +46,14 @@
                     <th>적요</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td><input type="checkbox" class="select-row"></td>
-                    <td><a href="saleEdit.html?id=1">2023/01/10-3</a></td>
-                    <td>P100001</td>
-                    <td>진라면</td>
-                    <td>10</td>
-                    <td>2,000</td>
-                    <td>대량구매로 인한 단가 할인적용</td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" class="select-row"></td>
-                    <td><a href="saleEdit.html?id=2">2023/01/10-2</a></td>
-                    <td>P200003</td>
-                    <td>신라면</td>
-                    <td>100</td>
-                    <td>1,500</td>
-                    <td>특별이벤트로 할인</td>
-                </tr>
+            <tbody id="sale-list">
             </tbody>
         </table>
-        <div class="buttons">
-            <button>신규</button>
+        <div id="btn-list" class="btn-list">
+            <button id="add-btn">신규</button>
             <button>선택삭제</button>
         </div>
     </div>
+    <script type="module" src="sale.js"></script>
 </body>
 </html>

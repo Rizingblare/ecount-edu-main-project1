@@ -17,11 +17,11 @@
                 <label for="item-name">품목명</label>
                 <input type="text" id="item" name="item-name" placeholder="품목명">
             </div>
-            <button type="submit">검색</button>
+            <button id="search-btn" class="search-btn">검색</button>
         </form>
         <div class="pagination">
-            <button>이전</button>
-            <button>다음</button>
+            <button id="prev-btn">이전</button>
+            <button id="next-btn">다음</button>
         </div>
         <table class="tb">
             <thead>
@@ -35,8 +35,9 @@
             <tbody id="item-list">
             </tbody>
         </table>
-        <div class="buttons">
-            <button>신규</button>
+        <div id="btn-list" class="btn-list">
+            <button id="submit-btn">적용</button>
+            <button id="add-btn">신규</button>
             <button>선택삭제</button>
         </div>
     </div>

@@ -1,0 +1,47 @@
+export const dummys = {
+    'sales' : [
+        { id: 1, date:'2022/08/10', dateCode: '3', itemCode: 'P100001', itemName: '진라면', amount: 10, price: 1000, purpose: '테스트' },
+        { id: 2, date:'2022/09/10', dateCode: '2', itemCode: 'P200003', itemName: '신라면', amount: 20, price: 2000, purpose: '테스트' },
+        { id: 3, date:'2023/01/12', dateCode: '1', itemCode: 'P200004', itemName: '안성탕면', amount: 30, price: 3000, purpose: '테스트' },
+        { id: 4, date:'2023/01/12', dateCode: '2', itemCode: 'P300001', itemName: '짜파게티', amount: 40, price: 4000, purpose: '테스트' },
+        { id: 5, date:'2023/01/13', dateCode: '5', itemCode: 'P100001', itemName: '진라면 순한맛', amount: 50, price: 5000, purpose: '테스트' },
+        { id: 6, date:'2023/01/13', dateCode: '7', itemCode: 'P200003', itemName: '신라면 블랙', amount: 60, price: 6000, purpose: '테스트' },
+        { id: 7, date:'2023/01/14', dateCode: '1', itemCode: 'P200004', itemName: '순하리 안성탕면', amount: 70, price: 7000, purpose: '테스트' },
+        { id: 8, date:'2023/01/14', dateCode: '3', itemCode: 'P100001', itemName: '진짬뽕', amount: 80, price: 8000, purpose: '테스트' },
+        { id: 9, date:'2023/01/15', dateCode: '2', itemCode: 'P200003', itemName: '신라면 건면', amount: 90, price: 9000, purpose: '테스트' },
+        { id: 10, date:'2023/01/15', dateCode: '4', itemCode: 'P200004', itemName: '짜왕 건면', amount: 100, price: 10000, purpose: '테스트' },
+        { id: 11, date:'2023/01/16', dateCode: '1', itemCode: 'P100001', itemName: '짜짜로니', amount: 110, price: 11000, purpose: '테스트' },
+        { id: 12, date:'2023/01/16', dateCode: '3', itemCode: 'P200003', itemName: '팔도비빔면', amount: 120, price: 12000, purpose: '테스트' },
+        { id: 13, date:'2023/01/17', dateCode: '2', itemCode: 'P200004', itemName: '삼양라면', amount: 130, price: 13000, purpose: '테스트' },
+        { id: 14, date:'2023/01/17', dateCode: '4', itemCode: 'P300001', itemName: '간짬뽕', amount: 140, price: 14000, purpose: '테스트' },
+        { id: 15, date:'2023/01/18', dateCode: '1', itemCode: 'P100001', itemName: '진짜장', amount: 150, price: 15000, purpose: '테스트' },
+        { id: 16, date:'2023/01/18', dateCode: '3', itemCode: 'P200003', itemName: '무파마', amount: 160, price: 16000, purpose: '테스트' },
+        { id: 17, date:'2023/01/19', dateCode: '2', itemCode: 'P200004', itemName: '꼬꼬면', amount: 170, price: 17000, purpose: '테스트' },
+        { id: 18, date:'2023/01/19', dateCode: '4', itemCode: 'P100001', itemName: '나가사키짬뽕', amount: 180, price: 18000, purpose: '테스트' },
+        { id: 19, date:'2023/01/20', dateCode: '1', itemCode: 'P200003', itemName: '감자면', amount: 190, price: 19000, purpose: '테스트' },
+        { id: 20, date:'2023/01/20', dateCode: '3', itemCode: 'P200004', itemName: '짜왕', amount: 200, price: 20000, purpose: '테스트' }
+    ],
+    
+    'items': [
+        { id: 1, code: 'P100001', name: '진라면' },
+        { id: 2, code: 'P200003', name: '신라면' },
+        { id: 3, code: 'P200004', name: '안성탕면' },
+        { id: 4, code: 'P300001', name: '짜파게티' },
+        { id: 5, code: 'P100001', name: '진라면 순한맛' },
+        { id: 6, code: 'P200003', name: '신라면 블랙' },
+        { id: 7, code: 'P200004', name: '순하리 안성탕면' },
+        { id: 8, code: 'P100001', name: '진짬뽕' },
+        { id: 9, code: 'P200003', name: '신라면 건면' },
+        { id: 10, code: 'P200004', name: '짜왕 건면' },
+        { id: 11, code: 'P100001', name: '짜짜로니' },
+        { id: 12, code: 'P200003', name: '팔도비빔면' },
+        { id: 13, code: 'P200004', name: '삼양라면' },
+        { id: 14, code: 'P300001', name: '간짬뽕' },
+        { id: 15, code: 'P100001', name: '진짜장' },
+        { id: 16, code: 'P200003', name: '무파마' },
+        { id: 17, code: 'P200004', name: '꼬꼬면' },
+        { id: 18, code: 'P100001', name: '나가사키짬뽕' },
+        { id: 19, code: 'P200003', name: '감자면' },
+        { id: 20, code: 'P200004', name: '짜왕' }
+    ]
+};
