@@ -1,9 +1,10 @@
 import * as saleEditHandler from './saleEditEventHandler.js';
-import { MODE } from './constants/config.js';
+import { MODE } from '../constants/config.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const mode = saleEditHandler.saleEditInit(window.location.search);
-
+    const urlParams = window.location.search;
+    const mode = saleEditHandler.init(urlParams);
+    
     if (mode === MODE.ADD_MODE) {
         registerSearchItemPopupEvent();
         registerMessageEvent();
@@ -55,7 +56,7 @@ function registerSubmitEvent(isEdit) {
 function registerResetEvent(isEdit) {
     const resetBtn = document.querySelector('.reset-btn');
     resetBtn.addEventListener('click', function() {
-        saleEditHandler.resetSaleFormData();
+        saleEditHandler.resetSaleFormData(isEdit);
     });
 }
 

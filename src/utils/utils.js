@@ -1,3 +1,12 @@
+export function isEmptyDTO(dto) {
+    if (Object.values(dto).every(value => {
+        if (Array.isArray(value)) return value.length === 0;
+        return value === '';
+    })) {
+        return;
+    }
+}
+
 export function parseURLParams(urlInfos) {
     const params = new URLSearchParams(urlInfos);
     const result = {};
@@ -20,7 +29,7 @@ export function allformsPreventSubmit() {
 
 export function renderItems(generateFunc, items, currentPage=1) {
     const itemsPerPage = 10;
-    const itemList = document.getElementById('item-list');
+    const itemList = document.getElementById('main-list');
     itemList.innerHTML = '';
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -32,7 +41,7 @@ export function renderItems(generateFunc, items, currentPage=1) {
     updatePaginationButtons(items.length, currentPage);
 }
 
-export function updatePaginationButtons(totalItems, currentPage) {
+function updatePaginationButtons(totalItems, currentPage) {
     const itemsPerPage = 10;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     const prevButton = document.getElementById('prev-btn');
@@ -42,32 +51,18 @@ export function updatePaginationButtons(totalItems, currentPage) {
     nextButton.disabled = currentPage === totalPages;
 }
 
-export function registerPaginationEvents() {
-    const prevButton = document.getElementById('prev-btn');
-    const nextButton = document.getElementById('next-btn');
-    const pageState = { currentPage: 1 };
+export function targetInDateRange(target, startDateCondition, endDateCondition) {
+    const targetDate = new Date(target);
+    const startDate = startDateCondition ? new Date(startDateCondition) : new Date(-8640000000000000);
+    const endDate = endDateCondition ? new Date(endDateCondition) : new Date(8640000000000000);
 
-    prevButton.addEventListener('click', function() {
-        navigateLeft(pageState);
-    });
-
-    nextButton.addEventListener('click', () => {
-        navigateRight(pageState);
-    });
+    return startDate <= targetDate && targetDate <= endDate;
 }
 
-export function navigateLeft(pageState) {
-    if (pageState.currentPage > 1) {
-        pageState.currentPage--;
-        renderItems(pageState.currentPage);
-    }
+export function targetInTextarray(target, arrayCondition) {
+    return arrayCondition.length === 0 || arrayCondition.includes(target.trim().toUpperCase());
 }
 
-export function navigateRight(pageState) {
-    const items = loadFromStorage(ITEM_KEY);
-    const totalPages = Math.ceil(items.length / 10);
-    if (pageState.currentPage < totalPages) {
-        pageState.currentPage++;
-        renderItems(pageState.currentPage);
-    }
+export function targetInText(target, textCondition) {
+    return textCondition === '' || target.includes(textCondition);
 }

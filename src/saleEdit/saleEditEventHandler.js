@@ -1,9 +1,9 @@
-import * as utils from "./utils/utils";
-import * as localStorageHandler from "./utils/localStorageHandler";
+import * as utils from "../utils/utils.js";
+import * as localStorageHandler from "../utils/localStorageHandler.js";
 
-import { MODE } from "./constants/config";
+import { MODE } from "../constants/config.js";
 
-export function saleEditInit(urlParams) {
+export function init(urlParams) {
     utils.allformsPreventSubmit();
     const mode = urlParams === '' ? MODE.ADD_MODE : MODE.EDIT_MODE;
     if (mode === MODE.EDIT_MODE) {
@@ -116,8 +116,9 @@ export function deleteItemFromStorage() {
 }
 
 export function resetSaleFormData(isEdit) {
+    const urlParams = window.location.search;
     if (isEdit) {
-        loadParams();
+        loadParams(urlParams);
         return;
     }
 

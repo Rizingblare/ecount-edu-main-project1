@@ -1,10 +1,10 @@
-import * as utils from './utils/utils.js';
-import * as localStorageHandler from './utils/localStorageHandler.js';
+import * as utils from '../utils/utils.js';
+import * as localStorageHandler from '../utils/localStorageHandler.js';
 
-import { ITEM_KEY, MODE } from './constants/config.js';
-import { ALERT_INPUT_MESSAGES } from './constants/messageConstants.js';
+import { ITEM_KEY, MODE } from '../constants/config.js';
+import { ALERT_INPUT_MESSAGES } from '../constants/messageConstants.js';
 
-export function itemEditInit(urlParams) {
+export function init(urlParams) {
     utils.allformsPreventSubmit();
     const mode = urlParams === '' ? MODE.ADD_MODE : MODE.EDIT_MODE;
     if (mode === MODE.EDIT_MODE) {

@@ -1,16 +1,17 @@
-import { ITEM_KEY } from './constants/config.js';
-import { ALERT_EVENT_MESSAGES } from './constants/messageConstants.js';
+import { ITEM_KEY } from '../constants/config.js';
+import { ALERT_EVENT_MESSAGES } from '../constants/messageConstants.js';
 
-import * as utils from './utils/utils.js';
-import { loadFromStorage } from './utils/localStorageHandler.js';
+import * as utils from '../utils/utils.js';
+import * as pagenationHandler from '../utils/pagenationHandler.js';
+import { loadFromStorage } from '../utils/localStorageHandler.js';
 
-export function itemInit() {
+export function init() {
     utils.allformsPreventSubmit();
     utils.renderItems(generateItemElement, loadFromStorage(ITEM_KEY));
-    utils.registerPaginationEvents();
+    pagenationHandler.registerPaginationEvents(generateItemElement, loadFromStorage(ITEM_KEY));
 }
 
-export function generateItemElement(item) {
+function generateItemElement(item) {
     const itemElement = document.createElement('tr');
     itemElement.dataset.id = item.id;
     itemElement.dataset.code = item.code;
@@ -21,7 +22,7 @@ export function generateItemElement(item) {
             <input type="checkbox">
         </td>    
         <td class="item-code">
-            <a href="javascript:void(0);" class="edit-link">
+            <a href="javascript:void(0);" class="select-link">
                 ${item.code}
             </a>
         </td>
@@ -43,8 +44,8 @@ export function searchItemsByKeyword() {
         return item.code.includes(itemCodeInput) && item.name.includes(itemNameInput);
     });
 
-    renderItems(generateItemElement, filteredItems);  // 필터된 아이템 렌더링 및 페이지네이션 초기화
-    registerPaginationEvents(filteredItems);  // 필터된 결과에 맞게 페이지네이션 재설정
+    utils.renderItems(generateItemElement, filteredItems);  // 필터된 아이템 렌더링 및 페이지네이션 초기화
+    pagenationHandler.registerPaginationEvents(generateItemElement, filteredItems);  // 필터된 결과에 맞게 페이지네이션 재설정
 }
 
 export function changeStateOfAllCheckboxes() {
@@ -58,30 +59,50 @@ export function changeStateOfAllCheckboxes() {
     selectAllCheckbox.checked = false;
 }
 
-export function openEditPopup(event) {
+
+export function handleItemSelectLink(target) {
+    const itemElement = target.closest('tr');
+
+    const selectedItemDTO = {
+        id: itemElement.dataset.id,
+        code: itemElement.dataset.code,
+        name: itemElement.dataset.name
+    };
+    if (window.opener) {
+        window.opener.postMessage({ selectedItems: [ selectedItemDTO ] }, '*');
+        window.close();
+    }
+    else {
+        alert(ALERT_EVENT_MESSAGES.NO_PARENT_WINDOW);
+    }
+}
+
+
+export function handleItemEditPopupLink(event) {
     const target = event.target.closest('.edit-link');
     
     if (target) {
         const itemElement = target.closest('tr');
-        const itemId = itemElement.dataset.id;
-        const itemCode = itemElement.dataset.code;
-        const itemName = itemElement.dataset.name;
-
-        openPopup(itemId, itemCode, itemName);
+        const itemEditDTO = {
+            id: itemElement.dataset.id,
+            code: itemElement.dataset.code,
+            name: itemElement.dataset.name
+        };
+        openItemEditPopup(itemEditDTO);
     }
 }
 
-export function openPopup(id, code, name) {
-    if (!id || !code || !name) {
+export function openItemEditPopup(dto) {
+    if (dto) {
         window.open(
-            'itemEdit.html',
+            `itemEdit.html?item-id=${dto.id}&item-code=${dto.code}&item-name=${dto.name}`,
             'itemEditPopup',
             'width=600,height=400'
         );
     }
     else {
         window.open(
-            `itemEdit.html?item-id=${id}&item-code=${code}&item-name=${name}`,
+            'itemEdit.html',
             'itemEditPopup',
             'width=600,height=400'
         );
@@ -89,7 +110,8 @@ export function openPopup(id, code, name) {
 }
 
 export function limitCheckboxSelection() {
-    const hasOpener = window.opener ? true : false;
+    const maxSelectCount = getMaxSelectCountByHost();
+    
     const checkboxes = document.querySelectorAll('#item-list .item-select input[type="checkbox"]');
     const selectedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
     console.log('selectedCheckboxes:', selectedCheckboxes.length);
@@ -111,6 +133,20 @@ export function limitCheckboxSelection() {
         selectAllCheckbox.checked = false;
     }
 }
+
+function getMaxSelectCountByHost() {
+    const openerURL = window.opener.location.href;
+    if (openerURL.includes('saleEdit.html')) {
+        return 1;
+    }
+    else if (openerURL.includes('sale.html')) {
+        return 1;
+    }
+    else {
+        return 10;
+    }
+}
+
 
 export function submitItems() {
     const checkboxes = document.querySelectorAll('#item-list .item-select input[type="checkbox"]');

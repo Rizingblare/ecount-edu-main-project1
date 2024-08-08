@@ -1,11 +1,11 @@
 import * as itemEditHandler from './itemEditEventHandler.js';
 
-import { MODE } from './constants/config.js';
+import { MODE } from '../constants/config.js';
 
 document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = window.location.search;
+    const mode = itemEditHandler.init(urlParams);
     
-    const mode = itemEditHandler.itemEditInit();
-
     if (mode === MODE.ADD_MODE) {
         registerSubmitEvent();
         registerResetEvent();
