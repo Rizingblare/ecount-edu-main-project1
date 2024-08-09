@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     registerAddBtnEvent();
     registerEditBtnEvent();
     registerIndividualCheckboxEvent();
-    registerSelectAllEvent();
+    registerSelectAllCheckboxEvent();
     registerReceiveMessageEvent();
 })
 
@@ -54,7 +54,7 @@ function registerIndividualCheckboxEvent() {
 }
 
 
-function registerSelectAllEvent() {
+function registerSelectAllCheckboxEvent() {
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');

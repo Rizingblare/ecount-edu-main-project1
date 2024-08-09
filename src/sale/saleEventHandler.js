@@ -14,14 +14,6 @@ export function init() {
 
 function generateSaleElement(sale) {
     const saleElement = document.createElement('tr');
-    saleElement.dataset.id = sale.id;
-    saleElement.dataset.date = sale.date;
-    saleElement.dataset.dateCode = sale.dateCode;
-    saleElement.dataset.itemCode = sale.itemCode;
-    saleElement.dataset.name = sale.itemName;
-    saleElement.dataset.amount = sale.amount;
-    saleElement.dataset.price = sale.price;
-    saleElement.dataset.purpose = sale.purpose;
     saleElement.classList.add('item');
     saleElement.innerHTML = `
         <td class="sale-select">
@@ -29,14 +21,14 @@ function generateSaleElement(sale) {
         </td>    
         <td class="sale-date-code">
             <a href="javascript:void(0);" class="edit-link">
-                ${sale.date}-${sale.dateCode}
+                ${sale.data_dt}-${sale.data_no}
             </a>
         </td>
-        <td class="sale-item-code">${sale.itemCode}</td>
-        <td class="sale-item-name">${sale.itemName}</td>
-        <td class="sale-amount">${sale.amount}</td>
+        <td class="sale-item-code">${sale.prodCode}</td>
+        <td class="sale-item-name">${sale.prodName}</td>
+        <td class="sale-amount">${sale.quantity}</td>
         <td class="sale-price">${sale.price}</td>
-        <td class="sale-purpose">${sale.purpose}</td>
+        <td class="sale-purpose">${sale.remarks}</td>
     `;
     return saleElement;
 }
@@ -100,21 +92,20 @@ export function deliverClosestDatasetToPopup(event) {
     
     if (target) {
         const itemElement = target.closest('tr');
-        const itemId = itemElement.dataset.id;
-        const date = itemElement.dataset.date;
-        const dateCode = itemElement.dataset.dateCode;
-        const itemCode = itemElement.dataset.itemCode;
-        const itemName = itemElement.dataset.name;
-        const amount = itemElement.dataset.amount;
+        const data_dt = itemElement.dataset.data_dt;
+        const data_no = itemElement.dataset.data_no;
+        const prodCode = itemElement.dataset.prodCode;
+        const prodName = itemElement.dataset.prodName;
+        const quantity = itemElement.dataset.quantity;
         const price = itemElement.dataset.price;
-        const purpose = itemElement.dataset.purpose;
+        const remarks = itemElement.dataset.remarks;
 
-        openPopup(itemId, date, dateCode, itemCode, itemName, amount, price, purpose);
+        openPopup(saleId, date, dateCode, itemCode, itemName, amount, price, purpose);
     }
 }
 
-export function openPopup(id, date, dateCode, itemCode, itemName, amount, price, purpose) {
-    if (!id || !date || !dateCode || !itemCode || !itemName || !amount || !price || !purpose) {
+export function openPopup(queryStringDTO) {
+    if (!queryStringDTO) {
         window.open(
             'saleEdit.html',
             'saleEditPopup',
@@ -123,7 +114,7 @@ export function openPopup(id, date, dateCode, itemCode, itemName, amount, price,
     }
     else {
         window.open(
-            `saleEdit.html?sale-id=${id}&sale-date=${date}&sale-date-code=${dateCode}&sale-item-code=${itemCode}&sale-item-name=${itemName}&sale-amount=${amount}&sale-price=${price}&sale-purpose=${purpose}`,
+            `saleEdit.html?sale-id=${queryStringDTO.saleId}&sale-date=${queryStringDTO.date}&sale-date-code=${queryStringDTO.dateCode}&sale-item-code=${itemCode}&sale-item-name=${itemName}&sale-amount=${amount}&sale-price=${price}&sale-purpose=${purpose}`,
             'saleEditPopup',
             'width=600,height=400'
         );

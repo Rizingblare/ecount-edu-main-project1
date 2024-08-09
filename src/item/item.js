@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     registerAddBtnEvent();
     registerRowClickEvent();
     registerIndividualCheckboxEvent();
-    registerSelectAllCheckBoxEvent();
+    registerSelectAllCheckboxEvent();
     registerSubmitBtnEvent();
 })
 
@@ -38,7 +38,7 @@ function registerRowClickEvent() {
     });
 }
 
-function registerSelectAllCheckBoxEvent() {
+function registerSelectAllCheckboxEvent() {
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('click', function() {
         itemHandler.changeStateOfAllCheckboxes(selectAllCheckbox.checked);
