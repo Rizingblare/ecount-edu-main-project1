@@ -17,7 +17,7 @@ export function loadFromStorage(key) {
         return JSON.parse(storedItems);
     }
     else {
-        saveToStorage(key, JSON.stringify(dummys[key]));
+        saveToStorage(key, dummys[key]);
         loadFromStorage(key);
     }
 }

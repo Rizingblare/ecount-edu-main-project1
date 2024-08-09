@@ -1,5 +1,29 @@
 import { renderItems } from './utils.js';
 
+export function renderItems(generateFunc, items, currentPage=1) {
+    const itemsPerPage = 10;
+    const itemList = document.getElementById('main-list');
+    itemList.innerHTML = '';
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const itemsToShow = items.slice(startIndex, endIndex);
+    itemsToShow.forEach(item => {
+        itemList.appendChild(generateFunc(item));
+    });
+    updatePaginationButtons(items.length, currentPage);
+}
+
+function updatePaginationButtons(totalItems, currentPage) {
+    const itemsPerPage = 10;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const prevButton = document.getElementById('prev-btn');
+    const nextButton = document.getElementById('next-btn');
+
+    prevButton.disabled = currentPage === 1;
+    nextButton.disabled = currentPage === totalPages;
+}
+
+
 export function registerPaginationEvents(generateFunc, items) {
     const prevButton = document.getElementById('prev-btn');
     const nextButton = document.getElementById('next-btn');

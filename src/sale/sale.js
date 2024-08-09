@@ -3,7 +3,7 @@ import * as saleEventHandler from './saleEventHandler.js';
 document.addEventListener('DOMContentLoaded', function() {
     const hasOpener = saleEventHandler.init();
     registerSearchBtnEvent();
-    registerItemSearchBtnEvent();
+    registerProdSearchBtnEvent();
     registerAddBtnEvent();
     registerEditBtnEvent();
     registerIndividualCheckboxEvent();
@@ -15,16 +15,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function registerSearchBtnEvent() {
     const searchBtn = document.getElementById('search-btn');
     searchBtn.addEventListener('click', function() {
-        saleEventHandler.searchItemsByKeyword();
+        saleEventHandler.searchProdsByKeyword();
     });
 }
 
 
-function registerItemSearchBtnEvent() {
-    const searchItemBtn = document.getElementById('search-item-btn');
+function registerProdSearchBtnEvent() {
+    const searchProdBtn = document.getElementById('search-prod-btn');
     
-    searchItemBtn.addEventListener('click', function() {
-        saleEventHandler.openSearchItemPopup();
+    searchProdBtn.addEventListener('click', function() {
+        saleEventHandler.openSearchProdPopup();
     });
 }
 
@@ -39,13 +39,13 @@ function registerAddBtnEvent() {
 
 function registerEditBtnEvent() {
     document.getElementById('main-list').addEventListener('click', function(event) {
-        saleEventHandler.deliverClosestDatasetToPopup(event);
+        saleEventHandler.handleSaleEditPopupLink(event);
     });
 }
 
 
 function registerIndividualCheckboxEvent() {
-    const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');
+    const checkboxes = document.querySelectorAll('#main-list .prod-select input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             saleEventHandler.limitCheckboxSelection();
@@ -57,7 +57,7 @@ function registerIndividualCheckboxEvent() {
 function registerSelectAllCheckboxEvent() {
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');
+        const checkboxes = document.querySelectorAll('#main-list .prod-select input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
             checkbox.checked = selectAllCheckbox.checked;
         });
@@ -67,6 +67,6 @@ function registerSelectAllCheckboxEvent() {
 
 function registerReceiveMessageEvent() {
     window.addEventListener('message', function(event) {
-        saleEventHandler.updateSelectedItems(event);
+        saleEventHandler.updateSelectedProds(event);
     });
 }

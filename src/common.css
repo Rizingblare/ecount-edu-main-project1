@@ -1,45 +1,3 @@
-/* .container {
-    width: 700px;
-}
-
-.row {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    background-color: rgb(240, 240, 240);
-    padding: 0.25rem;
-}
-
-.rowDate {
-    text-align: right;
-    display: grid;
-    grid-template-columns: 4fr 1fr 4fr;
-}
-
-.title {
-    font-size: large;
-    font-family: monospace;
-    background-color: rgba(191, 154, 255, 0.122);
-    padding: 0.25rem;
-}
-
-.tb {
-    border: 1px solid black;
-    width: 700px;
-
-}
-
-.tb th, .tb td {
-    text-align: center;
-}
-
-a {
-    text-decoration: none;
-}
-
-.btn-list {
-    display: flex;
-} */
-
 /* 기본적인 레이아웃 스타일 */
 .container {
     width: 80%;
@@ -166,4 +124,39 @@ input[type="text"] {
 
 .btn-list button:hover {
     background-color: #0056b3;
+}
+
+
+/* 선택된 품목 리스트 스타일 */
+#selected-items span {
+    display: inline-block;
+    background-color: #e0e0e0;
+    padding: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+}
+
+/* 품목 리스트 팝업 스타일 */
+#prod-list {
+    list-style: none;
+    padding: 0;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+#prod-list.hidden {
+    display: none;
+}
+
+#prod-list li {
+    padding: 8px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+#prod-list li:hover {
+    background-color: #f0f0f0;
 }

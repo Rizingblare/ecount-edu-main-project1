@@ -1,5 +1,5 @@
-export const ITEM_KEY = 'items';
-export const SALE_KEY = 'sales';
+export const PROD_KEY = 'prod';
+export const SALE_KEY = 'sale';
 
 export const MODE = {
     ADD_MODE: Symbol(),
@@ -7,8 +7,8 @@ export const MODE = {
 };
 
 export const URL = {
-    ITEM: 'item.html',
-    ITEM_EDIT: 'itemEdit.html',
+    PROD: 'prod.html',
+    PROD_EDIT: 'prodEdit.html',
     SALE: 'sale.html',
     SALE_EDIT: 'saleEdit.html'
 };

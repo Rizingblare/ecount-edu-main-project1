@@ -1,7 +1,7 @@
-import * as itemHandler from './itemEventHandler.js';
+import * as prodHandler from './prodEventHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    itemHandler.init();
+    prodHandler.init();
     registerSearchBtnEvent();
     registerAddBtnEvent();
     registerRowClickEvent();
@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', function() {
 function registerSearchBtnEvent() {
     const searchBtn = document.getElementById('search-btn');
     searchBtn.addEventListener('click', function() {
-        itemHandler.searchItemsByKeyword();
+        prodHandler.searchProdsByKeyword();
     });
 }
 
 function registerAddBtnEvent() {
     const addBtn = document.getElementById('add-btn');
     addBtn.addEventListener('click', function() {
-        itemHandler.openItemEditPopup();
+        prodHandler.openProdEditPopup();
     });
 }
 
@@ -29,11 +29,11 @@ function registerRowClickEvent() {
         const target = event.target;
 
         if (target.classList.contains('select-link')) {
-            itemHandler.handleItemSelectLink(target);
+            prodHandler.handleProdSelectLink(target);
         }
         
         else if (target.classList.contains('edit-link')) {
-            itemHandler.handleItemEditPopupLink(event);
+            prodHandler.handleProdEditPopupLink(event);
         }
     });
 }
@@ -41,15 +41,15 @@ function registerRowClickEvent() {
 function registerSelectAllCheckboxEvent() {
     const selectAllCheckbox = document.getElementById('select-all');
     selectAllCheckbox.addEventListener('click', function() {
-        itemHandler.changeStateOfAllCheckboxes(selectAllCheckbox.checked);
+        prodHandler.changeStateOfAllCheckboxes(selectAllCheckbox.checked);
     });
 }
 
 function registerIndividualCheckboxEvent() {
-    const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');
+    const checkboxes = document.querySelectorAll('#main-list .prod-select input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            itemHandler.limitCheckboxSelection();
+            prodHandler.limitCheckboxSelection();
         });
     });
 }
@@ -57,6 +57,6 @@ function registerIndividualCheckboxEvent() {
 function registerSubmitBtnEvent() {
     const submitBtn = document.getElementById('submit-btn');
     submitBtn.addEventListener('click', function() {
-        itemHandler.submitItems();
+        prodHandler.submitProds();
     });
 }
