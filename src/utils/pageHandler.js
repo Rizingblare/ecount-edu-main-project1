@@ -1,8 +1,6 @@
-import { renderItems } from './utils.js';
-
 export function renderItems(generateFunc, items, currentPage=1) {
     const itemsPerPage = 10;
-    const itemList = document.getElementById('main-list');
+    const itemList = document.getElementById('mainList');
     itemList.innerHTML = '';
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -16,8 +14,8 @@ export function renderItems(generateFunc, items, currentPage=1) {
 function updatePaginationButtons(totalItems, currentPage) {
     const itemsPerPage = 10;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const prevButton = document.getElementById('prev-btn');
-    const nextButton = document.getElementById('next-btn');
+    const prevButton = document.getElementById('prevBtn');
+    const nextButton = document.getElementById('nextBtn');
 
     prevButton.disabled = currentPage === 1;
     nextButton.disabled = currentPage === totalPages;
@@ -25,8 +23,8 @@ function updatePaginationButtons(totalItems, currentPage) {
 
 
 export function registerPaginationEvents(generateFunc, items) {
-    const prevButton = document.getElementById('prev-btn');
-    const nextButton = document.getElementById('next-btn');
+    const prevButton = document.getElementById('prevBtn');
+    const nextButton = document.getElementById('nextBtn');
     const pageState = { currentPage: 1 };
 
     prevButton.addEventListener('click', function() {

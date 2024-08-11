@@ -1,18 +1,14 @@
-export function parseURLParams(urlInfos) {
-    const params = new URLSearchParams(urlInfos);
-    const result = {};
+export function initializePageState() {
+    const hasOpener = window.opener ? true : false;
+    const hasQueryString = window.location.search ? true : false;
 
-    params.forEach((value, key) => {
-        result[key] = value;
-    });
-
-    return result;
+    return { hasOpener, hasQueryString };
 }
 
 export function openPopupWindow(targetURL, queryStringDTO) {
     const baseName = 'popup';
     const popupOptions = 'width=600,height=400';
-
+    
     if (!queryStringDTO) {
         window.open(targetURL, baseName, popupOptions);
     }
@@ -26,7 +22,6 @@ export function openPopupWindow(targetURL, queryStringDTO) {
             }
         }
 
-        // 최종 URL 생성
         const finalUrl = `${targetURL}?${queryParams.toString()}`;
         window.open(finalUrl, 'baseName', popupOptions);
     }

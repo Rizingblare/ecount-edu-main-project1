@@ -7,32 +7,25 @@ export function isEmptyDTO(dto) {
     }
 }
 
-export function allformsPreventSubmit() {
-    const allForms = document.getElementsByTagName('form');
-    for (const form of allForms) {
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-        })
-    }
-}
 
+export function parseURLParams(urlInfos) {
+    const params = new URLSearchParams(urlInfos);
+    const result = {};
 
-export function generateSelectedProdItemElement(prodDTOs) {
-    const container = document.getElementById('selected-prod-container');
-    container.innerHTML = '';
-    prodDTOs.forEach(prodDTO => {
-        const selectedProdElement = document.createElement('span');
-        selectedProdElement.textContent = prodDTO["prodName"] + '(' + prodDTO["prodCode"] + ') [X]';
-        selectedProdElement.dataset.code = prodDTO["prodCode"];
-        selectedProdElement.classList.add('selected-prod');
-        selectedProdElement.onclick = function() {
-            container.removeChild(selectedProdElement);
-        }
-        container.appendChild(selectedProdElement);
+    params.forEach((value, key) => {
+        result[key] = value;
     });
+
+    return result;
 }
 
-
+export function parseDateString(dateString) {
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(5, 7);
+    const day = dateString.substring(8, 10);
+    
+    return [year, month, day];
+}
 
 export function targetInDateRange(target, startDateCondition, endDateCondition) {
     const targetDate = new Date(target);
@@ -48,4 +41,31 @@ export function targetInTextarray(target, arrayCondition) {
 export function targetInText(target, textCondition) {
     return textCondition === '' || target.includes(textCondition);
 }
+
+
+export function allformsPreventSubmit() {
+    const allForms = document.getElementsByTagName('form');
+    for (const form of allForms) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+        })
+    }
+}
+
+
+export function generateSelectedProdItemElement(prodDTOs) {
+    const container = document.getElementById('selectedProdsContainer');
+    container.innerHTML = '';
+    prodDTOs.forEach(prodDTO => {
+        const selectedProdElement = document.createElement('span');
+        selectedProdElement.textContent = prodDTO["prodName"] + '(' + prodDTO["prodCode"] + ') [X]';
+        selectedProdElement.dataset.prodCode = prodDTO["prodCode"];
+        selectedProdElement.classList.add('selectedProdItem');
+        selectedProdElement.onclick = function() {
+            container.removeChild(selectedProdElement);
+        }
+        container.appendChild(selectedProdElement);
+    });
+}
+
 

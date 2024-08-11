@@ -1,33 +1,32 @@
 import * as utils from '../../utils/utils.js';
 import * as localStorageHandler from '../../utils/localStorageHandler.js';
 
-import { PROD_KEY, MODE } from '../../constants/config.js';
+import * as config from '../../constants/config.js';
 import { ALERT_INPUT_MESSAGES } from '../../constants/messageConstants.js';
 
-export function init(urlParams) {
+export function init(pageState) {
     utils.allformsPreventSubmit();
-    const mode = urlParams === '' ? MODE.ADD_MODE : MODE.EDIT_MODE;
-    if (mode === MODE.EDIT_MODE) {
-        loadParams(urlParams);
+    if (pageState.hasQueryString) {
+        loadParams();
     }
-    return mode;
 }
 
-export function loadParams(urlParams) {
+export function loadParams() {
+    const urlParams = window.location.search;
     const params = utils.parseURLParams(urlParams);
 
-    const prodCodeInput = document.querySelector('input[name="prod-code"]');
-    prodCodeInput.value = params["prod-code"];
+    const prodCodeInput = document.querySelector('input[name="prodCode"]');
+    prodCodeInput.value = params["prodCode"];
     prodCodeInput.setAttribute('readonly', true);
 
-    const prodNameInput = document.querySelector('input[name="prod-name"]');
-    prodNameInput.value = params["prod-name"];
+    const prodNameInput = document.querySelector('input[name="prodName"]');
+    prodNameInput.value = params["prodName"];
 }
 
 export function addProdToStorage() {
     const formData = new FormData(document.querySelector('form'));
-    const prodCode = formData.get('prod-code');
-    const prodName = formData.get('prod-name');
+    const prodCode = formData.get('prodCode');
+    const prodName = formData.get('prodName');
     
     if (!prodCode.trim() || !prodName.trim()) {
         alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
@@ -40,41 +39,39 @@ export function addProdToStorage() {
         name: prodName
     };
     
-    localStorageHandler.addToStorage(PROD_KEY, newProd);
+    localStorageHandler.addToStorage(config.PROD_CONFIG.KEY, newProd);
     closeWindowPopup();
 }
 
 export function editProdToStorage() {
-    const params = utils.parseURLParams();
-    const prodId = params['prod-id'];
     const formData = new FormData(document.querySelector('form'));
-    const prodCode = formData.get('prod-code');
-    const prodName = formData.get('prod-name');
+    const prodCode = formData.get('prodCode');
+    const prodName = formData.get('prodName');
 
     if (!prodCode.trim() || !prodName.trim()) {
         alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
         return;
     }
 
-    localStorageHandler.updateInStorage(PROD_KEY, { id: parseInt(prodId, 10), code: prodCode, name: prodName });
+    localStorageHandler.updateInStorage(config.PROD_CONFIG.KEY, 'prodCode', { code: prodCode, name: prodName });
     closeWindowPopup();
 }
 
 export function deleteProdFromStorage() {
     const params = utils.parseURLParams(window.location.search);
-    localStorageHandler.deleteFromStorage(PROD_KEY, params["prod-id"]);
+    localStorageHandler.deleteFromStorage(config.PROD_CONFIG.KEY, 'prodCode');
     closeWindowPopup();
 }
 
-export function resetWindowForm(isEdit, urlParams) {
-    const prodCodeInput = document.querySelector('input[name="prod-code"]');
+export function resetWindowForm(isEdit) {
+    const prodCodeInput = document.querySelector('input[name="prodCode"]');
     prodCodeInput.value = '';
 
-    const prodNameInput = document.querySelector('input[name="prod-name"]');
+    const prodNameInput = document.querySelector('input[name="prodName"]');
     prodNameInput.value = '';
 
     if (isEdit) {
-        loadParams(urlParams);
+        loadParams();
     }
 }
 

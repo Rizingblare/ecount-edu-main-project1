@@ -1,11 +1,11 @@
+import * as config from '../../constants/config.js';
 import * as saleEditHandler from './saleEditEventHandler.js';
-import { MODE } from '../../constants/config.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = window.location.search;
     const mode = saleEditHandler.init(urlParams);
     
-    if (mode === MODE.ADD_MODE) {
+    if (mode === config.MODE.ADD) {
         registerSearchProdPopupEvent();
         registerMessageEvent();
         registerSubmitEvent();
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
         registerCloseEvent();
     }
 
-    else if (mode === MODE.EDIT_MODE) {
+    else if (mode === config.MODE.EDIT) {
         registerSearchProdPopupEvent();
         registerMessageEvent();
         registerSubmitEvent(true);
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 })
 
 function registerSearchProdPopupEvent() {
-    const searchProdBtn = document.getElementById('search-prod-btn');
+    const searchProdBtn = document.getElementById('searchProdBtn');
     
     searchProdBtn.addEventListener('click', function() {
         saleEditHandler.openSearchProdPopup();
@@ -40,7 +40,7 @@ function registerMessageEvent() {
 
 
 function registerSubmitEvent(isEdit) {
-    const submitBtn = document.querySelector('.submit-btn');
+    const submitBtn = document.querySelector('.submitBtn');
     if (!isEdit) {
         submitBtn.addEventListener('click', function() {
             saleEditHandler.addProdToStorage()
@@ -54,26 +54,26 @@ function registerSubmitEvent(isEdit) {
 }
 
 function registerResetEvent(isEdit) {
-    const resetBtn = document.querySelector('.reset-btn');
+    const resetBtn = document.querySelector('.resetBtn');
     resetBtn.addEventListener('click', function() {
         saleEditHandler.resetSaleFormData(isEdit);
     });
 }
 
 function registerDeleteEvent() {
-    const deleteBtnArea = document.getElementById('delete-btn-area');
+    const deleteBtnArea = document.getElementById('deleteBtnArea');
     deleteBtnArea.innerHTML = `
-        <button class="delete-btn">삭제</button>
+        <button class="deleteBtn">삭제</button>
     `;
 
-    const deleteBtn = document.querySelector('.delete-btn');
+    const deleteBtn = document.querySelector('.deleteBtn');
     deleteBtn.addEventListener('click', function() {
         saleEditHandler.deleteProdFromStorage();
     });
 }
 
 function registerCloseEvent() {
-    const closeBtn = document.querySelector('.close-btn');
+    const closeBtn = document.querySelector('.closeBtn');
     closeBtn.addEventListener('click', function() {
         saleEditHandler.closePopup();
     });

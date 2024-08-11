@@ -7,44 +7,44 @@ export function getNextId() {
     return nextId;
 }
 
-export function saveToStorage(key, values) {
-    localStorage.setItem(key, JSON.stringify(values));
+export function saveToStorage(storageKey, values) {
+    localStorage.setItem(storageKey, JSON.stringify(values));
 }
 
-export function loadFromStorage(key) {
-    const storedItems = localStorage.getItem(key);
+export function loadFromStorage(storageKey) {
+    const storedItems = localStorage.getItem(storageKey);
     if (storedItems) {
         return JSON.parse(storedItems);
     }
     else {
-        saveToStorage(key, dummys[key]);
-        loadFromStorage(key);
+        saveToStorage(storageKey, dummys[storageKey]);
+        loadFromStorage(storageKey);
     }
 }
 
-export function addToStorage(key, newValue) {
-    let values = loadFromStorage(key);
+export function addToStorage(storageKey, newValue) {
+    let values = loadFromStorage(storageKey);
     values.push(newValue);
-    localStorage.setItem(key, JSON.stringify(values));
+    localStorage.setItem(storageKey, JSON.stringify(values));
     window.alert(SUCCESS_MESSAGES.SUCCESS_TO_SAVE);
 }
 
-export function updateInStorage(key, updatedValue) {
-    let values = loadFromStorage(key);
-    let index = values.findIndex(value => value.id === updatedValue.id);
+export function updateInStorage(storageKey, primaryKey, updatedValue) {
+    let values = loadFromStorage(storageKey);
+    let index = values.findIndex(value => value[primaryKey] === updatedValue[primaryKey]);
     if (index !== -1) {
         values[index] = updatedValue;
-        localStorage.setItem(key, JSON.stringify(values));
+        localStorage.setItem(storageKey, JSON.stringify(values));
     }
     window.alert(SUCCESS_MESSAGES.SUCCESS_TO_UPDATE);
 }
 
-export function deleteFromStorage(key, id) {
-    let values = loadFromStorage(key);
-    let index = values.findIndex(value => value.id === parseInt(id, 10));
+export function deleteFromStorage(storageKey, primaryKey) {
+    let values = loadFromStorage(storageKey);
+    let index = values.findIndex(value => value[primaryKey] === primaryKey);
     if (index !== -1) {
         values.splice(index, 1);
-        localStorage.setItem(key, JSON.stringify(values));
+        localStorage.setItem(storageKey, JSON.stringify(values));
     }
     window.alert(SUCCESS_MESSAGES.SUCCESS_TO_DELETE);
 }

@@ -1,62 +1,73 @@
+import * as windowHandler from '../utils/windowHandler.js';
 import * as prodHandler from './prodEventHandler.js';
+import * as checkboxHandler from '../utils/checkboxHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    prodHandler.init();
+    const pageState = windowHandler.initializePageState();
+    prodHandler.init(pageState);
+    
+    if (pageState.hasOpener) {
+        registerSubmitBtnEvent();
+    }
+
     registerSearchBtnEvent();
     registerAddBtnEvent();
-    registerRowClickEvent();
-    registerIndividualCheckboxEvent();
-    registerSelectAllCheckboxEvent();
-    registerSubmitBtnEvent();
+    registerItemLinkClickEvent();
+    registerIndividualCheckboxEvent(pageState);
+    registerSelectAllCheckboxEvent(pageState);
 })
 
 function registerSearchBtnEvent() {
-    const searchBtn = document.getElementById('search-btn');
+    const searchBtn = document.getElementById('searchBtn');
     searchBtn.addEventListener('click', function() {
         prodHandler.searchProdsByKeyword();
     });
 }
 
 function registerAddBtnEvent() {
-    const addBtn = document.getElementById('add-btn');
+    const addBtn = document.getElementById('addBtn');
     addBtn.addEventListener('click', function() {
         prodHandler.openProdEditPopup();
     });
 }
 
-function registerRowClickEvent() {
-    document.getElementById('main-list').addEventListener('click', function(event) {
+function registerItemLinkClickEvent() {
+    document.getElementById('mainList').addEventListener('click', function(event) {
         const target = event.target;
 
-        if (target.classList.contains('select-link')) {
-            prodHandler.handleProdSelectLink(target);
+        if (target.classList.contains('selectLink')) {
+            prodHandler.submitProdItemByLink(target);
         }
         
-        else if (target.classList.contains('edit-link')) {
+        else if (target.classList.contains('editLink')) {
             prodHandler.handleProdEditPopupLink(event);
         }
     });
 }
 
-function registerSelectAllCheckboxEvent() {
-    const selectAllCheckbox = document.getElementById('select-all');
+function registerSelectAllCheckboxEvent(pageState) {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
     selectAllCheckbox.addEventListener('click', function() {
-        prodHandler.changeStateOfAllCheckboxes(selectAllCheckbox.checked);
+        checkboxHandler.changeStateOfAllCheckboxes(pageState);
     });
 }
 
-function registerIndividualCheckboxEvent() {
-    const checkboxes = document.querySelectorAll('#main-list .prod-select input[type="checkbox"]');
+function registerIndividualCheckboxEvent(pageState) {
+    const checkboxes = document.querySelectorAll('#mainList .selectIndividualCheckbox input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            prodHandler.limitCheckboxSelection();
+            checkboxHandler.limitCheckboxSelection(pageState);
         });
     });
 }
 
 function registerSubmitBtnEvent() {
-    const submitBtn = document.getElementById('submit-btn');
+    const submitBtnArea = document.getElementById('submitBtnArea');
+    submitBtnArea.innerHTML = `
+        <button class="submitBtn">제출</button>
+    `;
+    const submitBtn = document.querySelector('.submitBtn');
     submitBtn.addEventListener('click', function() {
-        prodHandler.submitProds();
+        prodHandler.submitProdItemsByBtn();
     });
 }

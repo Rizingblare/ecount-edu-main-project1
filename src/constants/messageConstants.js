@@ -11,6 +11,7 @@ export const ALERT_INPUT_MESSAGES = {
 };
 
 export const ALERT_EVENT_MESSAGES = {
+    EXCEED_COUNT_TEN: '최대 10개까지 선택 가능합니다.',
     EXCEED_COUNT_THREE: '최대 3개까지 선택 가능합니다.',
     EXCEED_COUNT_ONE: '최대 1개까지 선택 가능합니다.',
     NO_SELECTED_PROD: '선택한 상품이 없습니다.',

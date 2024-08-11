@@ -1,27 +1,26 @@
+import * as windowHandler from '../../utils/windowHandler.js';
 import * as prodEditHandler from './prodEditEventHandler.js';
 
-import { MODE } from '../constants/config.js';
-
 document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = window.location.search;
-    const mode = prodEditHandler.init(urlParams);
+    const pageState = windowHandler.initializePageState();
+    prodEditHandler.init(pageState);
     
-    if (mode === MODE.ADD_MODE) {
-        registerSubmitEvent();
-        registerResetEvent();
-        registerCloseEvent();
-    }
-
-    else if (mode === MODE.EDIT_MODE) {
+    if (pageState.hasQueryString) {
         registerSubmitEvent(true);
         registerDeleteEvent();
         registerResetEvent(true);
         registerCloseEvent();
     }
+
+    else {
+        registerSubmitEvent();
+        registerResetEvent();
+        registerCloseEvent();        
+    }
 })
 
 function registerSubmitEvent(isEdit) {
-    const submitBtn = document.querySelector('.submit-btn');
+    const submitBtn = document.querySelector('.submitBtn');
     if (!isEdit) {
         submitBtn.addEventListener('click', function() {
             prodEditHandler.addProdToStorage();
@@ -36,26 +35,26 @@ function registerSubmitEvent(isEdit) {
 
 
 function registerDeleteEvent() {
-    const deleteBtnArea = document.getElementById('delete-btn-area');
+    const deleteBtnArea = document.getElementById('deleteBtnArea');
     deleteBtnArea.innerHTML = `
-        <button class="delete-btn">삭제</button>
+        <button class="deleteBtn">삭제</button>
     `;
 
-    const deleteBtn = document.querySelector('.delete-btn');
+    const deleteBtn = document.querySelector('.deleteBtn');
     deleteBtn.addEventListener('click', function() {
         prodEditHandler.deleteProdFromStorage();
     });
 }
 
 function registerResetEvent(isEdit) {
-    const resetBtn = document.querySelector('.reset-btn');
+    const resetBtn = document.querySelector('.resetBtn');
     resetBtn.addEventListener('click', function() {
-        prodEditHandler.resetWindowForm(isEdit, window.location.search);
+        prodEditHandler.resetWindowForm(isEdit);
     });
 }
 
 function registerCloseEvent() {
-    const closeBtn = document.querySelector('.close-btn');
+    const closeBtn = document.querySelector('.closeBtn');
     closeBtn.addEventListener('click', function() {
         prodEditHandler.closeWindowPopup();
     });
