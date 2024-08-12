@@ -10,33 +10,36 @@
             <h1 class="title">■ 판매입력</h1>
             <form action="#" method="get">
                 <div class="row">
-                    <label>전표일자</label>
-                    <input type="date" id="sale-date" name="sale-date">
+                    <label for="data_dt">전표일자</label>
+                    <input type="date" id="data_dt" name="data_dt">
                 </div>
                 <div class="row">
-                    <label for="sale-item">품목</label>
-                    <button id="search-item-btn">🔍</button>
-                    <div id="selected-items-container"><input type="text" id="sale-item" name="sale-item" placeholder="품목"></div>
+                    <label for="prodInfo">품목</label>
+                    <button id="searchProdBtn">🔍</button>
+                    <div id="prodContainer">
+                        <input type="text" id="prodInfo" name="prodInfo" placeholder="품목">
+                        <div id="selectedProdsContainer"></div>
+                    </div>
                 </div>
                 <div class="row">
-                    <label for="sale-amount">수량</label>
-                    <input type="text" id="sale-amount" name="sale-amount" placeholder="수량">
+                    <label for="quantity">수량</label>
+                    <input type="text" id="quantity" name="quantity" placeholder="수량">
                 </div>
                 <div class="row">
-                    <label for="sale-price">단가</label>
-                    <input type="text" id="sale-price" name="sale-price" placeholder="단가">
+                    <label for="price">단가</label>
+                    <input type="text" id="price" name="price" placeholder="단가">
                 </div>
                 <div class="row">
-                    <label for="sale-purpose">적요</label>
-                    <input type="text" id="sale-purpose" name="sale-purpose" placeholder="적요">
+                    <label for="remarks">적요</label>
+                    <input type="text" id="remarks" name="remarks" placeholder="적요">
                 </div>
             </form>
-            <div id="btn-list" class="btn-list">
-                <div><button class="submit-btn">저장</button></div>
-                <div id="delete-btn-area"></div>
-                <div><button class="reset-btn">다시작성</button></div>
-                <div><button class="close-btn">닫기</button></div>
+            <div id="btnList" class="btnList">
+                <div><button class="submitBtn">저장</button></div>
+                <div id="deleteBtnArea"></div>
+                <div><button class="resetBtn">다시작성</button></div>
+                <div><button class="closeBtn">닫기</button></div>
             </div>
         </div>
-        <script type="module" src="./saleEdit/saleEdit.js"></script>
+        <script type="module" src="./sale/saleEdit/saleEdit.js"></script>
     </body>

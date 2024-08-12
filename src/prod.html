@@ -10,35 +10,35 @@
         <h1 class="title">■ 품목조회</h1>
         <form action="#" method="get">
             <div class="row">
-                <label for="prod-code">품목코드</label>
-                <input type="text" id="prod-code" name="prod-code" placeholder="품목코드">
+                <label for="prodCode">품목코드</label>
+                <input type="text" id="prodCode" name="prodCode" placeholder="품목코드">
             </div>
             <div class="row">
-                <label for="prod-name">품목명</label>
-                <input type="text" id="prod" name="prod-name" placeholder="품목명">
+                <label for="prodName">품목명</label>
+                <input type="text" id="prod" name="prodName" placeholder="품목명">
             </div>
-            <button id="search-btn" class="search-btn">검색</button>
+            <button id="searchBtn" class="searchBtn">검색</button>
         </form>
         <div class="pagination">
-            <button id="prev-btn">이전</button>
-            <button id="next-btn">다음</button>
+            <button id="prevBtn">이전</button>
+            <button id="nextBtn">다음</button>
         </div>
         <table class="tb">
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all"></th>
+                    <th><input type="checkbox" id="selectAllCheckbox"></th>
                     <th>품목코드</th>
                     <th>품목명</th>
                     <th>수정</th>
                 </tr>
             </thead>
-            <tbody id="main-list">
+            <tbody id="mainList">
             </tbody>
         </table>
-        <div id="btn-list" class="btn-list">
-            <button id="submit-btn">적용</button>
-            <button id="add-btn">신규</button>
-            <button>선택삭제</button>
+        <div id="btnList" class="btnList">
+            <div id="submitBtnArea"></div>
+            <button id="addBtn">신규</button>
+            <button id="seletedDeleteBtn">선택삭제</button>
         </div>
     </div>
     <script type="module" src="./prod/prod.js"></script>

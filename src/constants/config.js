@@ -1,14 +1,27 @@
-export const ITEM_KEY = 'items';
-export const SALE_KEY = 'sales';
-
 export const MODE = {
-    ADD_MODE: Symbol(),
-    EDIT_MODE: Symbol()
+    ADD: Symbol(),
+    EDIT: Symbol()
 };
 
-export const URL = {
-    ITEM: 'item.html',
-    ITEM_EDIT: 'itemEdit.html',
-    SALE: 'sale.html',
-    SALE_EDIT: 'saleEdit.html'
-};
+export const PROD_CONFIG = {
+    KEY : 'prod',
+
+    PROD : {
+        URL : 'prod.html',
+    },
+
+    PROD_EDIT : {
+        URL : 'prodEdit.html',
+    }
+}
+
+export const SALE_CONFIG = {
+    KEY : 'sale',
+    SALE : {
+        URL : 'sale.html',
+    },
+
+    SALE_EDIT : {
+        URL : 'saleEdit.html',
+    }
+}

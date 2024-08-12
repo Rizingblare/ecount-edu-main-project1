@@ -1,145 +1,106 @@
 import * as utils from '../utils/utils.js';
-import * as pagenationHandler from '../utils/pagenationHandler.js';
+import * as pageHandler from '../utils/pageHandler.js';
+import * as windowHandler from '../utils/windowHandler.js';
 import { loadFromStorage } from '../utils/localStorageHandler.js';
 
-import { SALE_KEY } from '../constants/config.js';
+import * as config from '../constants/config.js';
 import { ALERT_EVENT_MESSAGES } from '../constants/messageConstants.js';
 
 
 export function init() {
     utils.allformsPreventSubmit();
-    utils.renderItems(generateSaleElement, loadFromStorage(SALE_KEY));
-    pagenationHandler.registerPaginationEvents(generateSaleElement, loadFromStorage(SALE_KEY));
+    pageHandler.renderItems(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.KEY));
+    pageHandler.registerPaginationEvents(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.KEY));
 }
 
-function generateSaleElement(sale) {
+function generateSaleItemElement(saleItem) {
     const saleElement = document.createElement('tr');
+    const [saleYear, saleMonth, saleDay] = utils.parseDateString(saleItem.data_dt);
+    saleElement.dataset.data_dt = saleItem.data_dt;
+    saleElement.dataset.data_no = saleItem.data_no;
+    saleElement.dataset.prodCode = saleItem.prodCode;
+    saleElement.dataset.prodName = saleItem.prodName;
+    saleElement.dataset.quantity = saleItem.quantity;
+    saleElement.dataset.price = saleItem.price;
+    saleElement.dataset.remarks = saleItem.remarks;
     saleElement.classList.add('item');
     saleElement.innerHTML = `
-        <td class="sale-select">
+        <td class="selectIndividualCheckbox">
             <input type="checkbox">
         </td>    
-        <td class="sale-date-code">
-            <a href="javascript:void(0);" class="edit-link">
-                ${sale.data_dt}-${sale.data_no}
+        <td>
+            <a href="javascript:void(0);" class="editLink">
+                ${saleYear}/${saleMonth}/${saleDay}-${saleItem.data_no}
             </a>
         </td>
-        <td class="sale-item-code">${sale.prodCode}</td>
-        <td class="sale-item-name">${sale.prodName}</td>
-        <td class="sale-amount">${sale.quantity}</td>
-        <td class="sale-price">${sale.price}</td>
-        <td class="sale-purpose">${sale.remarks}</td>
+        <td>${saleItem.prodCode}</td>
+        <td>${saleItem.prodName}</td>
+        <td>${saleItem.quantity}</td>
+        <td>${saleItem.price}</td>
+        <td>${saleItem.remarks}</td>
     `;
     return saleElement;
 }
 
-export function openSearchItemPopup() {
-    window.open('item.html', 'itemPopup', 'width=600,height=400');
-}
+export function updateSelectedProds(event) {
+    const selectedProdItemsDTO = event.data.selectedProdItemsDTO;
+     if (selectedProdItemsDTO && selectedProdItemsDTO.length > 0) {
+         utils.generateSelectedProdItemElement(selectedProdItemsDTO);
+     }
+ }
 
-export function updateSelectedItems(event) {
-   const selectedItems = event.data.selectedItems;
-    if (selectedItems && selectedItems.length > 0) {
-        const container = document.getElementById('selected-items-container');
-        container.innerHTML = '';
-
-        selectedItems.forEach(item => {
-            const itemElement = document.createElement('span');
-            itemElement.textContent = item.name + '(' + item.code + ') ';
-            itemElement.dataset.id = item.id;
-            itemElement.dataset.code = item.code;
-            itemElement.classList.add('msg-item');
-            container.appendChild(itemElement);
-        });
+export function handleSaleEditPopupLink(event) {
+    const target = event.target.closest('.editLink');
+    
+    if (target) {
+        const prodElement = target.closest('tr');
+        const prodEditDTO = {
+            data_dt: prodElement.dataset.data_dt,
+            data_no: prodElement.dataset.data_no,
+            prodCode: prodElement.dataset.prodCode,
+            prodName: prodElement.dataset.prodName,
+            quantity: prodElement.dataset.quantity,
+            price: prodElement.dataset.price,
+            remarks: prodElement.dataset.remarks
+        };
+        windowHandler.openPopupWindow(config.SALE_CONFIG.SALE_EDIT.URL, prodEditDTO);
     }
 }
 
-export function searchItemsByKeyword() {
+
+export function openSearchProdPopup() {
+    windowHandler.openPopupWindow(config.PROD_CONFIG.PROD.URL);
+}
+
+
+export function searchProdsByKeyword() {
     const searchInputDTO = {
-        startDate : document.querySelector('input[name="start-date"]').value.trim(),
-        endDate : document.querySelector('input[name="end-date"]').value.trim(),
-        saleItems: [],
-        salePurpose : document.querySelector('input[name="sale-purpose"]').value.trim()
+        startDate : document.querySelector('input[name="startDate"]').value.trim(),
+        endDate : document.querySelector('input[name="endDate"]').value.trim(),
+        saleProds: [],
+        saleRemarks : document.querySelector('input[name="remarks"]').value.trim()
     }
 
-    const selectedArea = document.getElementById('selected-items-container');
+    const prodContainer = document.getElementById('prodContainer');
+    const selectedValues = prodContainer.querySelectorAll('.selectedProdItem');
+    const selectedValue = prodContainer.querySelector('input').value.trim().toUpperCase();
 
-    if (selectedArea.querySelector('input')) {
-        const selectedValue = selectedArea.querySelector('input').value().trim().toUpperCase(); // input 태그 선택
-        if (selectedValue) searchInputDTO.saleItems.push(selectedValue);
+    if (selectedValues) {
+        Array.from(selectedValues).map(value => searchInputDTO.saleProds.push(value.dataset.prodCode));
     }
-    else {
-        const selectedValues = selectedArea.querySelectorAll('.msg-item');
-        Array.from(selectedValues).map(value => searchInputDTO.saleItems.push(value.dataset.code));
+
+    if (selectedValue) {
+        searchInputDTO.saleProds.push(selectedValue);
     }
 
     if (utils.isEmptyDTO(searchInputDTO)) return;
 
-    const items = loadFromStorage(SALE_KEY);
-
+    const items = loadFromStorage(config.SALE_CONFIG.KEY);
     const filteredItems = items.filter(item => {
-        return utils.targetInDateRange(item.date, searchInputDTO.startDate, searchInputDTO.endDate) &&
-            utils.targetInTextarray(item.itemCode, searchInputDTO.saleItems) &&
-            utils.targetInText(item.purpose, searchInputDTO.salePurpose);
+        return utils.targetInDateRange(item.data_dt, searchInputDTO.startDate, searchInputDTO.endDate) &&
+            utils.targetInTextarray(item.prodCode, searchInputDTO.saleProds) &&
+            utils.targetInText(item.remarks, searchInputDTO.saleRemarks);
     });
-
-    utils.renderItems(generateSaleElement, filteredItems);
-    pagenationHandler.registerPaginationEvents(generateSaleElement, filteredItems);
-}
-
-export function deliverClosestDatasetToPopup(event) {
-    const target = event.target.closest('.edit-link');
-    
-    if (target) {
-        const itemElement = target.closest('tr');
-        const data_dt = itemElement.dataset.data_dt;
-        const data_no = itemElement.dataset.data_no;
-        const prodCode = itemElement.dataset.prodCode;
-        const prodName = itemElement.dataset.prodName;
-        const quantity = itemElement.dataset.quantity;
-        const price = itemElement.dataset.price;
-        const remarks = itemElement.dataset.remarks;
-
-        openPopup(saleId, date, dateCode, itemCode, itemName, amount, price, purpose);
-    }
-}
-
-export function openPopup(queryStringDTO) {
-    if (!queryStringDTO) {
-        window.open(
-            'saleEdit.html',
-            'saleEditPopup',
-            'width=600,height=400'
-        );
-    }
-    else {
-        window.open(
-            `saleEdit.html?sale-id=${queryStringDTO.saleId}&sale-date=${queryStringDTO.date}&sale-date-code=${queryStringDTO.dateCode}&sale-item-code=${itemCode}&sale-item-name=${itemName}&sale-amount=${amount}&sale-price=${price}&sale-purpose=${purpose}`,
-            'saleEditPopup',
-            'width=600,height=400'
-        );
-    }
-}
-
-export function limitCheckboxSelection(isOpened) {
-    const checkboxes = document.querySelectorAll('#item-list .item-select input[type="checkbox"]');
-    const selectedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
-    console.log('selectedCheckboxes:', selectedCheckboxes.length);
-    if (isOpened) {
-        if (selectedCheckboxes.length > 1) {
-            alert(ALERT_EVENT_MESSAGES.EXCEED_COUNT_ONE);
-            selectedCheckboxes[selectedCheckboxes.length - 1].checked = false;
-        }
-    }
-    else {
-        if (selectedCheckboxes.length > 3) {
-            alert(ALERT_EVENT_MESSAGES.EXCEED_COUNT_THREE);
-            selectedCheckboxes[selectedCheckboxes.length - 1].checked = false;
-        }
-    }
-    
-    const selectAllCheckbox = document.getElementById('select-all');
-    if (selectedCheckboxes.length < checkboxes.length) {
-        selectAllCheckbox.checked = false;
-    }
+    pageHandler.renderItems(generateSaleItemElement, filteredItems);
+    pageHandler.registerPaginationEvents(generateSaleItemElement, filteredItems);
 }

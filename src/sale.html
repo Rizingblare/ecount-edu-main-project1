@@ -12,32 +12,33 @@
             <div class="row">
                 <label>전표일자</label>
                 <div class="rowDate">
-                    <input type="date" id="start-date" name="start-date">
+                    <input type="date" id="startDate" name="startDate">
                     <span style="text-align: center;">~</span>
-                    <input type="date" id="end-date" name="end-date">
+                    <input type="date" id="endDate" name="endDate">
                 </div>
             </div>
             <div class="row">
-                <label for="sale-item">품목</label>
-                <button id="search-item-btn">🔍</button>
-                <div id="selected-items-container">
-                    <input type="text" id="sale-item" name="sale-item" placeholder="품목">
+                <label for="prodInfo">품목</label>
+                <button id="searchProdBtn">🔍</button>
+                <div id="prodContainer">
+                    <input type="text" id="prodInfo" name="prodInfo" placeholder="품목">
+                    <div id="selectedProdsContainer"></div>
                 </div>
             </div>
             <div class="row">
-                <label for="sale-purpose">적요</label>
-                <input type="text" id="sale-purpose" name="sale-purpose" placeholder="적요">
+                <label for="remarks">적요</label>
+                <input type="text" id="remarks" name="remarks" placeholder="적요">
             </div>
-            <button id="search-btn" class="search-btn">검색</button>
+            <button id="searchBtn" class="searchBtn">검색</button>
         </form>
         <div class="pagination">
-            <button id="prev-btn">이전</button>
-            <button id="next-btn">다음</button>
+            <button id="prevBtn">이전</button>
+            <button id="nextBtn">다음</button>
         </div>
         <table class="tb">
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all"></th>
+                    <th><input type="checkbox" id="selectAllCheckbox"></th>
                     <th>전표일자/번호</th>
                     <th>품목코드</th>
                     <th>품목명</th>
@@ -46,11 +47,11 @@
                     <th>적요</th>
                 </tr>
             </thead>
-            <tbody id="main-list">
+            <tbody id="mainList">
             </tbody>
         </table>
-        <div id="btn-list" class="btn-list">
-            <button id="add-btn">신규</button>
+        <div id="btnList" class="btnList">
+            <button id="addBtn">신규</button>
             <button>선택삭제</button>
         </div>
     </div>

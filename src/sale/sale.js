@@ -1,36 +1,40 @@
 import * as saleEventHandler from './saleEventHandler.js';
+import * as checkboxHandler from '../utils/checkboxHandler.js';
+import * as windowHandler from '../utils/windowHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const hasOpener = saleEventHandler.init();
+    const pageState = windowHandler.initializePageState();
+    saleEventHandler.init();
+
     registerSearchBtnEvent();
-    registerItemSearchBtnEvent();
+    registerProdSearchBtnEvent();
     registerAddBtnEvent();
     registerEditBtnEvent();
-    registerIndividualCheckboxEvent();
-    registerSelectAllCheckboxEvent();
+    registerIndividualCheckboxEvent(pageState);
+    registerSelectAllCheckboxEvent(pageState);
     registerReceiveMessageEvent();
 })
 
 
 function registerSearchBtnEvent() {
-    const searchBtn = document.getElementById('search-btn');
+    const searchBtn = document.getElementById('searchBtn');
     searchBtn.addEventListener('click', function() {
-        saleEventHandler.searchItemsByKeyword();
+        saleEventHandler.searchProdsByKeyword();
     });
 }
 
 
-function registerItemSearchBtnEvent() {
-    const searchItemBtn = document.getElementById('search-item-btn');
+function registerProdSearchBtnEvent() {
+    const searchProdBtn = document.getElementById('searchProdBtn');
     
-    searchItemBtn.addEventListener('click', function() {
-        saleEventHandler.openSearchItemPopup();
+    searchProdBtn.addEventListener('click', function() {
+        saleEventHandler.openSearchProdPopup();
     });
 }
 
 
 function registerAddBtnEvent() {
-    const addBtn = document.getElementById('add-btn');
+    const addBtn = document.getElementById('addBtn');
     addBtn.addEventListener('click', function() {
         saleEventHandler.openPopup();
     });
@@ -38,35 +42,32 @@ function registerAddBtnEvent() {
 
 
 function registerEditBtnEvent() {
-    document.getElementById('main-list').addEventListener('click', function(event) {
-        saleEventHandler.deliverClosestDatasetToPopup(event);
+    document.getElementById('mainList').addEventListener('click', function(event) {
+        saleEventHandler.handleSaleEditPopupLink(event);
     });
 }
 
 
-function registerIndividualCheckboxEvent() {
-    const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');
+function registerIndividualCheckboxEvent(pageState) {
+    const checkboxes = document.querySelectorAll('#mainList .selectIndividualCheckbox input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            saleEventHandler.limitCheckboxSelection();
+            checkboxHandler.limitCheckboxSelection(pageState);
         });
     });
 }
 
 
-function registerSelectAllCheckboxEvent() {
-    const selectAllCheckbox = document.getElementById('select-all');
+function registerSelectAllCheckboxEvent(pageState) {
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
     selectAllCheckbox.addEventListener('change', function() {
-        const checkboxes = document.querySelectorAll('#main-list .item-select input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
-        });
+        checkboxHandler.changeStateOfAllCheckboxes(pageState);
     });
 }
 
 
 function registerReceiveMessageEvent() {
     window.addEventListener('message', function(event) {
-        saleEventHandler.updateSelectedItems(event);
+        saleEventHandler.updateSelectedProds(event);
     });
 }

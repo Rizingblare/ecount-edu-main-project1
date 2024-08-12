@@ -1,0 +1,5 @@
+1. 선택 삭제 기능 구현
+2. opener로 메시지 주고 받는 기능 별도의 handler 모듈로 분리
+3. prodEditEventHandler에 deleteProd 기능 키값 전달 안하는 버그 수정
+
+4. prod.html 팝업에서 각 row 수정 버튼 누르면 windowHandler.openPopupWindow에서 에러나는 버그 수정
