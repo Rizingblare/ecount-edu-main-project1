@@ -1,25 +1,20 @@
-import * as config from '../../constants/config.js';
+import * as config from '../../config/config.js';
+import * as selectedProdHandler from '../../prod/selectedProdHandler.js';
+import * as popupHandler from '../../utils/popupHandler.js';
 import * as saleEditHandler from './saleEditEventHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = window.location.search;
-    const mode = saleEditHandler.init(urlParams);
+    const pageState = popupHandler.initializePageState();
+    saleEditHandler.init(pageState);
     
-    if (mode === config.MODE.ADD) {
-        registerSearchProdPopupEvent();
-        registerMessageEvent();
-        registerSubmitEvent();
-        registerResetEvent();
-        registerCloseEvent();
-    }
-
-    else if (mode === config.MODE.EDIT) {
-        registerSearchProdPopupEvent();
-        registerMessageEvent();
-        registerSubmitEvent(true);
+    registerSearchProdPopupEvent();
+    registerMessageEvent();
+    registerSubmitEvent(pageState);
+    registerResetEvent(pageState);
+    registerCloseEvent();
+    
+    if (pageState.hasQueryString) {
         registerDeleteEvent();
-        registerResetEvent(true);
-        registerCloseEvent();
     }
 })
 
@@ -27,36 +22,28 @@ function registerSearchProdPopupEvent() {
     const searchProdBtn = document.getElementById('searchProdBtn');
     
     searchProdBtn.addEventListener('click', function() {
-        saleEditHandler.openSearchProdPopup();
+        popupHandler.openPopup(config.URL.PROD);
     });
 
 }
 
 function registerMessageEvent() {
     window.addEventListener('message', function(event) {
-        saleEditHandler.updateSelectedProds(event);
+        selectedProdHandler.updateSelectedProds(event);
     });
 }
 
-
-function registerSubmitEvent(isEdit) {
+function registerSubmitEvent(pageState) {
     const submitBtn = document.querySelector('.submitBtn');
-    if (!isEdit) {
-        submitBtn.addEventListener('click', function() {
-            saleEditHandler.addProdToStorage()
-        });
-    }
-    else {
-        submitBtn.addEventListener('click', function() {
-            saleEditHandler.editProdToStorage();
-        });
-    }
+    submitBtn.addEventListener('click', function() {
+        saleEditHandler.submitToStorage(pageState);
+    });
 }
 
-function registerResetEvent(isEdit) {
+function registerResetEvent(pageState) {
     const resetBtn = document.querySelector('.resetBtn');
     resetBtn.addEventListener('click', function() {
-        saleEditHandler.resetSaleFormData(isEdit);
+        saleEditHandler.resetSaleFormData(pageState);
     });
 }
 
@@ -75,6 +62,6 @@ function registerDeleteEvent() {
 function registerCloseEvent() {
     const closeBtn = document.querySelector('.closeBtn');
     closeBtn.addEventListener('click', function() {
-        saleEditHandler.closePopup();
+        popupHandler.closePopup();
     });
 }

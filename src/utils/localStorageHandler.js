@@ -1,4 +1,4 @@
-import { SUCCESS_MESSAGES } from "../constants/messageConstants.js";
+import { SUCCESS_MESSAGES } from "../config/messageConstants.js";
 import { dummys } from "../dummys/dummys.js";
 
 export function getNextId() {
@@ -17,13 +17,18 @@ export function loadFromStorage(storageKey) {
         return JSON.parse(storedItems);
     }
     else {
-        saveToStorage(storageKey, dummys[storageKey]);
-        loadFromStorage(storageKey);
+        const addedDummysID = dummys[storageKey].map((item, index) => ({
+            id: index + 1,
+            ...item
+        }));
+        saveToStorage(storageKey, addedDummysID);
+        return addedDummysID;
     }
 }
 
 export function addToStorage(storageKey, newValue) {
     let values = loadFromStorage(storageKey);
+    newValue.id = getNextId();
     values.push(newValue);
     localStorage.setItem(storageKey, JSON.stringify(values));
     window.alert(SUCCESS_MESSAGES.SUCCESS_TO_SAVE);

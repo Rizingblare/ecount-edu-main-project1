@@ -1,19 +1,21 @@
 import * as utils from "../../utils/utils.js";
-import * as windowHandler from '../../utils/pageHandler.js';
+import * as popupHandler from '../../utils/popupHandler.js';
 import * as localStorageHandler from "../../utils/localStorageHandler.js";
+import * as selectedProdHandler from '../../prod/selectedProdHandler.js';
 
-import * as config from "../../constants/config.js";
+import * as config from "../../config/config.js";
+import { DTOFactory } from "../../model/DTOFactory.js";
+import { SaleState } from "../../model/SaleDTO.js";
 
-export function init(urlParams) {
+export function init(pageState) {
     utils.allformsPreventSubmit();
-    const mode = urlParams === '' ? config.MODE.ADD : config.MODE.EDIT;
-    if (mode === config.MODE.EDIT) {
-        loadParams(urlParams);
+    if (pageState.hasQueryString) {
+        loadParams();
     }
-    return mode;
 }
 
-export function loadParams(urlParams) {
+export function loadParams() {
+    const urlParams = window.location.search;
     const params = utils.parseURLParams(urlParams);
 
     const saleDateInput = document.querySelector('input[name="data_dt"]');
@@ -26,7 +28,7 @@ export function loadParams(urlParams) {
         prodCode: params["prodCode"]
     }];
 
-    utils.generateSelectedProdItemElement(prodDTOs);
+    selectedProdHandler.generateSelectedProdItemElement(prodDTOs);
 
     const saleQuantityInput = document.querySelector('input[name="quantity"]');
     saleQuantityInput.value = params["quantity"];
@@ -38,54 +40,31 @@ export function loadParams(urlParams) {
     saleRemarksInput.value = params["remarks"];
 }
 
-export function openSearchProdPopup() {
-    windowHandler.openPopupWindow(config.PROD_CONFIG.PROD.URL);
-}
-
-export function updateSelectedProds(event) {
-     //if (event.origin !== 'http://yourdomain.com') return;
-     const selectedProdItemsDTO = event.data.selectedProdItemsDTO;
-     if (selectedProdItemsDTO && selectedProdItemsDTO.length > 0) {
-         utils.generateSelectedProdItemElement(selectedProdItemsDTO);
-    }
-}
-
-export function addProdToStorage() {
+export function submitToStorage(pageState) {
     const formData = new FormData(document.querySelector('form'));
-    const saleDate = formData.get('date_dt');
-    const saleCode = document.querySelectorAll('.selectedProdItem')[0].dataset.prodCode;
-    // const saleProds = document.querySelectorAll('.item');
-    // const saleCodeArray = Array.from(saleProds).map(prod => prod.dataset.prodCode);
-
-    const saleAmount = formData.get('quantity');
-    const salePrice = formData.get('price');
-    const salePurpose = formData.get('remarks');
     
-    if (!saleDate.trim() || !saleCode.trim() || !saleAmount.trim() || !salePrice.trim() || !salePurpose.trim() ) {
-        alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
-        return;
-    }
+    const saleEditDTO = DTOFactory.createSaleDTO();
+        
+    saleEditDTO.builder()
+        .setId(pageState.hasQueryString ? utils.getIdFromQueryString() : localStorageHandler.getNextId())
+        .setDateDt(formData.get('data_dt'))
+        .setDateNo(pageState.hasQueryString ? utils.getIdFromQueryString() : localStorageHandler.getNextId())
+        .setProdCode(formData.get('prodCode'))
+        .setQuantity(formData.get('quantity'))
+        .setPrice(formData.get('price'))
+        .setRemarks(formData.get('remarks'))
+        .build();
 
-    const newProd = {
-        id: getNextId(),
-        date: saleDate,
-        code: saleCode,
-        quantity: saleAmount,
-        price: salePrice,
-        remarks: salePurpose
-    };
+    if (!saleEditDTO.validate()) return;
     
-    localStorageHandler.addToStorage(config.SALE_CONFIG.KEY, newProd);
-    closePopup();
+    localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, saleEditDTO);
+    popupHandler.closePopup();
 }
 
 export function editProdToStorage() {
     const formData = new FormData(document.querySelector('form'));
     const saleDate = formData.get('date_dt');
     const saleCode = document.querySelectorAll('.item')[0].dataset.prodCode;
-    // const saleProds = document.querySelectorAll('.item');
-    // const saleCodeArray = Array.from(saleProds).map(prod => prod.dataset.prodCode);
-
     const saleAmount = formData.get('quantity');
     const salePrice = formData.get('price');
     const salePurpose = formData.get('remarks');
@@ -95,14 +74,14 @@ export function editProdToStorage() {
         return;
     }
 
-    localStorageHandler.updateInStorage(config.SALE_CONFIG.KEY, { id: parseInt(saleId, 10), date: saleDate, code: saleCode, quantity: saleAmount, price: salePrice, remarks: salePurpose });
-    closePopup();
+    localStorageHandler.updateInStorage(config.SALE_CONFIG.SECRET_KEY, { id: parseInt(saleId, 10), date: saleDate, code: saleCode, quantity: saleAmount, price: salePrice, remarks: salePurpose });
+    popupHandler.closePopup();
 }
 
 export function deleteProdFromStorage() {
     const params = parseURLParams();
-    localStorageHandler.deleteFromStorage(config.SALE_CONFIG.KEY, params["sale-id"]);
-    closePopup();
+    localStorageHandler.deleteFromStorage(config.SALE_CONFIG.SECRET_KEY, params["sale-id"]);
+    popupHandler.closePopup();
 }
 
 export function resetSaleFormData(isEdit) {
@@ -129,9 +108,4 @@ export function resetSaleFormData(isEdit) {
 
     const container = document.getElementById('selectedProdsContainer');
     container.innerHTML = '';
-}
-
-export function closePopup() {
-    window.close();
-    if (window.opener) window.opener.location.reload();
 }

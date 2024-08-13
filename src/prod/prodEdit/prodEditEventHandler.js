@@ -1,8 +1,8 @@
 import * as utils from '../../utils/utils.js';
 import * as localStorageHandler from '../../utils/localStorageHandler.js';
 
-import * as config from '../../constants/config.js';
-import { ALERT_INPUT_MESSAGES } from '../../constants/messageConstants.js';
+import * as config from '../../config/config.js';
+import { ALERT_INPUT_MESSAGES } from '../../config/messageConstants.js';
 
 export function init(pageState) {
     utils.allformsPreventSubmit();
@@ -35,11 +35,11 @@ export function addProdToStorage() {
 
     const newProd = {
         id: localStorageHandler.getNextId(),
-        code: prodCode,
-        name: prodName
+        prodCode: prodCode,
+        prodName: prodName
     };
     
-    localStorageHandler.addToStorage(config.PROD_CONFIG.KEY, newProd);
+    localStorageHandler.addToStorage(config.PROD_CONFIG.SECRET_KEY, newProd);
     closeWindowPopup();
 }
 
@@ -53,13 +53,13 @@ export function editProdToStorage() {
         return;
     }
 
-    localStorageHandler.updateInStorage(config.PROD_CONFIG.KEY, 'prodCode', { code: prodCode, name: prodName });
+    localStorageHandler.updateInStorage(config.PROD_CONFIG.SECRET_KEY, 'prodCode', { proCode: prodCode, prodName: prodName });
     closeWindowPopup();
 }
 
 export function deleteProdFromStorage() {
     const params = utils.parseURLParams(window.location.search);
-    localStorageHandler.deleteFromStorage(config.PROD_CONFIG.KEY, 'prodCode');
+    localStorageHandler.deleteFromStorage(config.PROD_CONFIG.SECRET_KEY, 'prodCode');
     closeWindowPopup();
 }
 

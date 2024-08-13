@@ -1,13 +1,17 @@
-import * as windowHandler from '../utils/windowHandler.js';
-import * as prodHandler from './prodEventHandler.js';
+import * as config from '../config/config.js';
+import * as popupHandler from '../utils/popupHandler.js';
 import * as checkboxHandler from '../utils/checkboxHandler.js';
 
+import * as prodHandler from './prodEventHandler.js';
+import * as selectedProdHandler from './selectedProdHandler.js';
+
 document.addEventListener('DOMContentLoaded', function() {
-    const pageState = windowHandler.initializePageState();
+    const pageState = popupHandler.initializePageState();
     prodHandler.init(pageState);
     
     if (pageState.hasOpener) {
         registerSubmitBtnEvent();
+        registerCloseEvent();
     }
 
     registerSearchBtnEvent();
@@ -27,7 +31,7 @@ function registerSearchBtnEvent() {
 function registerAddBtnEvent() {
     const addBtn = document.getElementById('addBtn');
     addBtn.addEventListener('click', function() {
-        prodHandler.openProdEditPopup();
+        popupHandler.openPopup(config.URL.PROD_EDIT);
     });
 }
 
@@ -36,7 +40,7 @@ function registerItemLinkClickEvent() {
         const target = event.target;
 
         if (target.classList.contains('selectLink')) {
-            prodHandler.submitProdItemByLink(target);
+            selectedProdHandler.submitProdItemByLink(target);
         }
         
         else if (target.classList.contains('editLink')) {
@@ -68,6 +72,17 @@ function registerSubmitBtnEvent() {
     `;
     const submitBtn = document.querySelector('.submitBtn');
     submitBtn.addEventListener('click', function() {
-        prodHandler.submitProdItemsByBtn();
+        selectedProdHandler.submitProdItemsByBtn();
+    });
+}
+
+function registerCloseEvent() {
+    const closeBtnArea = document.getElementById('closeBtnArea');
+    closeBtnArea.innerHTML = `
+        <button class="closeBtn">닫기</button>
+    `;
+    const closeBtn = document.querySelector('.closeBtn');
+    closeBtn.addEventListener('click', function() {
+        popupHandler.closePopup();
     });
 }

@@ -1,9 +1,11 @@
-import * as saleEventHandler from './saleEventHandler.js';
+import * as config from '../config/config.js';
+import * as popupHandler from '../utils/popupHandler.js';
 import * as checkboxHandler from '../utils/checkboxHandler.js';
-import * as windowHandler from '../utils/windowHandler.js';
+import * as saleEventHandler from './saleEventHandler.js';
+import * as selectedProdHandler from '../prod/selectedProdHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const pageState = windowHandler.initializePageState();
+    const pageState = popupHandler.initializePageState();
     saleEventHandler.init();
 
     registerSearchBtnEvent();
@@ -13,13 +15,14 @@ document.addEventListener('DOMContentLoaded', function() {
     registerIndividualCheckboxEvent(pageState);
     registerSelectAllCheckboxEvent(pageState);
     registerReceiveMessageEvent();
+    registerMainPageBtnEvent();
 })
 
 
 function registerSearchBtnEvent() {
     const searchBtn = document.getElementById('searchBtn');
     searchBtn.addEventListener('click', function() {
-        saleEventHandler.searchProdsByKeyword();
+        saleEventHandler.searchSalesByKeyword();
     });
 }
 
@@ -28,7 +31,7 @@ function registerProdSearchBtnEvent() {
     const searchProdBtn = document.getElementById('searchProdBtn');
     
     searchProdBtn.addEventListener('click', function() {
-        saleEventHandler.openSearchProdPopup();
+        popupHandler.openPopup(config.URL.PROD);
     });
 }
 
@@ -36,7 +39,7 @@ function registerProdSearchBtnEvent() {
 function registerAddBtnEvent() {
     const addBtn = document.getElementById('addBtn');
     addBtn.addEventListener('click', function() {
-        saleEventHandler.openPopup();
+        popupHandler.openPopup(config.URL.SALE_EDIT);
     });
 }
 
@@ -68,6 +71,13 @@ function registerSelectAllCheckboxEvent(pageState) {
 
 function registerReceiveMessageEvent() {
     window.addEventListener('message', function(event) {
-        saleEventHandler.updateSelectedProds(event);
+        selectedProdHandler.updateSelectedProds(event);
+    });
+}
+
+function registerMainPageBtnEvent() {
+    const mainPageBtn = document.getElementById('mainPageBtn');
+    mainPageBtn.addEventListener('click', function() {
+        window.location.href = config.URL.MAIN;
     });
 }

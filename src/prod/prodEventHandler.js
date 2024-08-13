@@ -1,15 +1,15 @@
-import * as config from '../constants/config.js';
-import { ALERT_EVENT_MESSAGES } from '../constants/messageConstants.js';
+import * as config from '../config/config.js';
+import { ALERT_EVENT_MESSAGES } from '../config/messageConstants.js';
 
 import * as utils from '../utils/utils.js';
-import * as pageHandler from '../utils/pageHandler.js';
-import * as windowHandler from '../utils/pageHandler.js';
+import * as pagingHandler from '../utils/pagingHandler.js';
+import * as popupHandler from '../utils/popupHandler.js';
 import { loadFromStorage } from '../utils/localStorageHandler.js';
 
 export function init() {
     utils.allformsPreventSubmit();
-    pageHandler.renderItems(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.KEY));
-    pageHandler.registerPaginationEvents(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.KEY));
+    pagingHandler.renderItems(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.SECRET_KEY));
+    pagingHandler.registerPaginationEvents(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.SECRET_KEY));
 }
 
 function generateProdItemElement(prodItem) {
@@ -36,68 +36,28 @@ function generateProdItemElement(prodItem) {
     return prodElement;
 }
 
-export function submitProdItemByLink(target) {
-    const prodElement = target.closest('tr');
-
-    const selectedProdDTO = {
-        prodCode: prodElement.dataset.prodCode,
-        prodName: prodElement.dataset.prodName
-    };
-
-    if (window.opener) {
-        window.opener.postMessage({ selectedProdItemsDTO: [ selectedProdDTO ] }, '*');
-        //window.close();
-    }
-    else {
-        alert(ALERT_EVENT_MESSAGES.NO_PARENT_WINDOW);
-    }
-}
-
-export function submitProdItemsByBtn() {
-    const checkboxes = document.querySelectorAll('#mainList .selectIndividualCheckbox input[type="checkbox"]');
-    const selectedProdItemsDTO = Array.from(checkboxes)
-        .filter(checkbox => checkbox.checked)
-        .map(checkbox => {
-            const prodElement = checkbox.closest('.item');
-            return {
-                prodCode: prodElement.dataset.prodCode,
-                prodName: prodElement.dataset.prodName
-            };
-        });
-    if (selectedProdItemsDTO.length === 0) {
-        alert(ALERT_EVENT_MESSAGES.NO_SELECTED_PROD);
-    }
-    else {
-        if (window.opener) {
-            window.opener.postMessage({ selectedProdItemsDTO: selectedProdItemsDTO }, '*');
-        }
-        window.close();
-    }
-}
-
-
 export function handleProdEditPopupLink(event) {
     const target = event.target.closest('.editLink');
     
     if (target) {
         const prodElement = target.closest('tr');
         const prodEditDTO = {
-            code: prodElement.dataset.prodCode,
-            name: prodElement.dataset.prodName
+            prodCode: prodElement.dataset.prodCode,
+            prodName: prodElement.dataset.prodName
         };
-        windowHandler.openPopupWindow(config.PROD_CONFIG.PROD_EDIT.URL, prodEditDTO);
+        popupHandler.openPopup(config.URL.PROD_EDIT, prodEditDTO);
     }
 }
 
 
 export function searchProdsByKeyword() {
-    const prods = loadFromStorage(config.PROD_CONFIG.KEY);
+    const prods = loadFromStorage(config.PROD_CONFIG.SECRET_KEY);
     const prodCodeInput = document.querySelector('input[name="prodCode"]').value.trim();
     const prodNameInput = document.querySelector('input[name="prodName"]').value.trim();
     const filteredProds = prods.filter(prod => {
-        return prod.code.includes(prodCodeInput) && prod.name.includes(prodNameInput);
+        return prod.prodCode.includes(prodCodeInput) && prod.prodName.includes(prodNameInput);
     });
 
-    pageHandler.renderItems(generateProdItemElement, filteredProds);
-    pageHandler.registerPaginationEvents(generateProdItemElement, filteredProds);
+    pagingHandler.renderItems(generateProdItemElement, filteredProds);
+    pagingHandler.registerPaginationEvents(generateProdItemElement, filteredProds);
 }

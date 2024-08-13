@@ -1,8 +1,8 @@
-import * as windowHandler from '../../utils/windowHandler.js';
+import * as popupHandler from '../../utils/popupHandler.js';
 import * as prodEditHandler from './prodEditEventHandler.js';
 
 document.addEventListener('DOMContentLoaded', function() {
-    const pageState = windowHandler.initializePageState();
+    const pageState = popupHandler.initializePageState();
     prodEditHandler.init(pageState);
     
     if (pageState.hasQueryString) {

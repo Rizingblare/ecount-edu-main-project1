@@ -1,3 +1,5 @@
+import * as config from "../config/config.js";
+
 export function initializePageState() {
     const hasOpener = window.opener ? true : false;
     const hasQueryString = window.location.search ? true : false;
@@ -5,17 +7,21 @@ export function initializePageState() {
     return { hasOpener, hasQueryString };
 }
 
-export function openPopupWindow(targetURL, queryStringDTO) {
-    const baseName = 'popup';
+export function toMainPage() {
+    window.location.href = config.URL.INDEX;
+}
+
+export function openPopup(targetURL, paramsDTO) {
+    const name = targetURL.replace('.html','');
     const popupOptions = 'width=600,height=400';
     
-    if (!queryStringDTO) {
-        window.open(targetURL, baseName, popupOptions);
+    if (!paramsDTO) {
+        window.open(targetURL, name, popupOptions);
     }
     else {
         const queryParams = new URLSearchParams();
 
-        for (const [key, value] of Object.entries(queryStringDTO)) {
+        for (const [key, value] of Object.entries(paramsDTO)) {
             console.log(key, value);
             if (value !== undefined && value !== null) {
                 queryParams.append(key, value);
@@ -23,6 +29,11 @@ export function openPopupWindow(targetURL, queryStringDTO) {
         }
 
         const finalUrl = `${targetURL}?${queryParams.toString()}`;
-        window.open(finalUrl, 'baseName', popupOptions);
+        window.open(finalUrl, name, popupOptions);
     }
+}
+
+export function closePopup() {
+    window.close();
+    window.opener.location.reload();
 }

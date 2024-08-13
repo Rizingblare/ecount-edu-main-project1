@@ -1,16 +1,15 @@
 import * as utils from '../utils/utils.js';
-import * as pageHandler from '../utils/pageHandler.js';
-import * as windowHandler from '../utils/windowHandler.js';
+import * as pagingHandler from '../utils/pagingHandler.js';
+import * as popupHandler from '../utils/popupHandler.js';
 import { loadFromStorage } from '../utils/localStorageHandler.js';
 
-import * as config from '../constants/config.js';
-import { ALERT_EVENT_MESSAGES } from '../constants/messageConstants.js';
+import * as config from '../config/config.js';
 
 
 export function init() {
     utils.allformsPreventSubmit();
-    pageHandler.renderItems(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.KEY));
-    pageHandler.registerPaginationEvents(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.KEY));
+    pagingHandler.renderItems(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
+    pagingHandler.registerPaginationEvents(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
 }
 
 function generateSaleItemElement(saleItem) {
@@ -42,19 +41,12 @@ function generateSaleItemElement(saleItem) {
     return saleElement;
 }
 
-export function updateSelectedProds(event) {
-    const selectedProdItemsDTO = event.data.selectedProdItemsDTO;
-     if (selectedProdItemsDTO && selectedProdItemsDTO.length > 0) {
-         utils.generateSelectedProdItemElement(selectedProdItemsDTO);
-     }
- }
-
 export function handleSaleEditPopupLink(event) {
     const target = event.target.closest('.editLink');
     
     if (target) {
         const prodElement = target.closest('tr');
-        const prodEditDTO = {
+        const toProdEditDTO = {
             data_dt: prodElement.dataset.data_dt,
             data_no: prodElement.dataset.data_no,
             prodCode: prodElement.dataset.prodCode,
@@ -63,17 +55,11 @@ export function handleSaleEditPopupLink(event) {
             price: prodElement.dataset.price,
             remarks: prodElement.dataset.remarks
         };
-        windowHandler.openPopupWindow(config.SALE_CONFIG.SALE_EDIT.URL, prodEditDTO);
+        popupHandler.openPopup(config.URL.SALE_EDIT, toProdEditDTO);
     }
 }
 
-
-export function openSearchProdPopup() {
-    windowHandler.openPopupWindow(config.PROD_CONFIG.PROD.URL);
-}
-
-
-export function searchProdsByKeyword() {
+export function searchSalesByKeyword() {
     const searchInputDTO = {
         startDate : document.querySelector('input[name="startDate"]').value.trim(),
         endDate : document.querySelector('input[name="endDate"]').value.trim(),
@@ -95,12 +81,12 @@ export function searchProdsByKeyword() {
 
     if (utils.isEmptyDTO(searchInputDTO)) return;
 
-    const items = loadFromStorage(config.SALE_CONFIG.KEY);
+    const items = loadFromStorage(config.SALE_CONFIG.SECRET_KEY);
     const filteredItems = items.filter(item => {
         return utils.targetInDateRange(item.data_dt, searchInputDTO.startDate, searchInputDTO.endDate) &&
             utils.targetInTextarray(item.prodCode, searchInputDTO.saleProds) &&
             utils.targetInText(item.remarks, searchInputDTO.saleRemarks);
     });
-    pageHandler.renderItems(generateSaleItemElement, filteredItems);
-    pageHandler.registerPaginationEvents(generateSaleItemElement, filteredItems);
+    pagingHandler.renderItems(generateSaleItemElement, filteredItems);
+    pagingHandler.registerPaginationEvents(generateSaleItemElement, filteredItems);
 }

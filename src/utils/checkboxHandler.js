@@ -1,11 +1,11 @@
-import { ALERT_EVENT_MESSAGES } from "../constants/messageConstants.js";
+import * as config from "../config/config.js";
+import { ALERT_EVENT_MESSAGES } from "../config/messageConstants.js";
 
 
 export function changeStateOfAllCheckboxes(pageState) {
-    const EXCEED_COUNT_MESSAGE = getLimitSelectCountByHost(pageState);
-    
+    const { EXCEED_COUNT_MESSAGE } = getLimitSelectCountByHost(pageState);
     if (pageState.hasOpener) {
-        ALERT_EVENT_MESSAGES(EXCEED_COUNT_MESSAGE);
+        alert(EXCEED_COUNT_MESSAGE);
         selectAllCheckbox.checked = false;
     }
 
@@ -45,12 +45,12 @@ function getLimitSelectCountByHost(pageState) {
     if (pageState.hasOpener) {
         const openerURL = window.opener.location.href;
         
-        if (openerURL.includes(config.SALE_CONFIG.SALE_EDIT.URL)) {
+        if (openerURL.includes(config.URL.SALE_EDIT)) {
             limitSelectInfo.LIMIT_SELECT_COUNT = 1;
             limitSelectInfo.EXCEED_COUNT_MESSAGE = ALERT_EVENT_MESSAGES.EXCEED_COUNT_ONE;
         }
         
-        else if (openerURL.includes(config.SALE_CONFIG.SALE.URL)) {
+        else if (openerURL.includes(config.URL.SALE)) {
             limitSelectInfo.LIMIT_SELECT_COUNT = 3;
             limitSelectInfo.EXCEED_COUNT_MESSAGE = ALERT_EVENT_MESSAGES.EXCEED_COUNT_THREE;
         }
@@ -60,6 +60,5 @@ function getLimitSelectCountByHost(pageState) {
         limitSelectInfo.LIMIT_SELECT_COUNT = 10;
         limitSelectInfo.EXCEED_COUNT_MESSAGE = ALERT_EVENT_MESSAGES.EXCEED_COUNT_TEN;
     }
-
     return limitSelectInfo;
 }
