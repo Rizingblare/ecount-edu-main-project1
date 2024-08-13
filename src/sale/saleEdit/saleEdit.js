@@ -36,7 +36,7 @@ function registerMessageEvent() {
 function registerSubmitEvent(pageState) {
     const submitBtn = document.querySelector('.submitBtn');
     submitBtn.addEventListener('click', function() {
-        saleEditHandler.submitToStorage(pageState);
+        saleEditHandler.submitSaleToStorage(pageState);
     });
 }
 
@@ -55,7 +55,7 @@ function registerDeleteEvent() {
 
     const deleteBtn = document.querySelector('.deleteBtn');
     deleteBtn.addEventListener('click', function() {
-        saleEditHandler.deleteProdFromStorage();
+        saleEditHandler.deleteSaleFromStorage();
     });
 }
 

@@ -1,16 +1,13 @@
+import * as config from '../config/config.js';
 import * as utils from '../utils/utils.js';
 import * as pagingHandler from '../utils/pagingHandler.js';
 import * as popupHandler from '../utils/popupHandler.js';
 import { loadFromStorage } from '../utils/localStorageHandler.js';
 
-import * as config from '../config/config.js';
 
 
 export function init() {
-    //localStorage.clear();
     utils.allformsPreventSubmit();
-
-    console.log("now", loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
     pagingHandler.renderItems(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
     pagingHandler.registerPaginationEvents(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
 }

@@ -39,59 +39,42 @@ export function loadParams() {
     saleRemarksInput.value = params["remarks"];
 }
 
-export function submitToStorage(pageState) {
+export function submitSaleToStorage(pageState) {
     const formData = new FormData(document.querySelector('form'));
 
     var saleEditInputDTO;
     if (pageState.hasQueryString) {
        saleEditInputDTO = {
-            id: utils.getIdFromQueryString(),
-            date_dt: formData.get('data_dt').substring(0, 10),
-            date_no: parseInt(formData.get('data_dt').substring(11)),
+            id: utils.getPrimaryKeyValueFromQueryString(config.SALE_CONFIG.PRIMARY_KEY),
+            data_dt: formData.get('data_dt').substring(0, 10),
+            data_no: parseInt(formData.get('data_dt').substring(11)),
             prodCode: document.querySelector('.selectedProdItem').dataset.prodCode,
             prodName: document.querySelector('.selectedProdItem').dataset.prodName,
             quantity: parseInt(formData.get('quantity')),
             price: parseInt(formData.get('price')),
             remarks: formData.get('remarks')
         };
-        localStorageHandler.updateInStorage(config.SALE_CONFIG.SECRET_KEY, 'id', saleEditInputDTO);
+        localStorageHandler.updateInStorage(config.SALE_CONFIG.SECRET_KEY, config.SALE_CONFIG.PRIMARY_KEY, saleEditInputDTO);
     }
     else {
         saleEditInputDTO = {
             id: localStorageHandler.getNextId(),
-            date_dt: formData.get('data_dt'),
-            date_no: localStorageHandler.getNextId(),
+            data_dt: formData.get('data_dt'),
+            data_no: localStorageHandler.getNextId(),
             prodCode: document.querySelector('.selectedProdItem').dataset.prodCode,
             prodName: document.querySelector('.selectedProdItem').dataset.prodName,
             quantity: parseInt(formData.get('quantity')),
             price: parseInt(formData.get('price')),
             remarks: formData.get('remarks')
         };
-        localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, saleEditInputDTO);
+        localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, config.SALE_CONFIG.PRIMARY_KEY, saleEditInputDTO);
     }
     popupHandler.closePopup();
 }
 
-export function editProdToStorage() {
-    const formData = new FormData(document.querySelector('form'));
-    const saleDate = formData.get('date_dt');
-    const saleCode = document.querySelectorAll('.item')[0].dataset.prodCode;
-    const saleAmount = formData.get('quantity');
-    const salePrice = formData.get('price');
-    const salePurpose = formData.get('remarks');
-
-    if (!saleDate.trim() || !saleCode.trim() || !saleAmount.trim() || !salePrice.trim() || !salePurpose.trim() ) {
-        alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
-        return;
-    }
-
-    localStorageHandler.updateInStorage(config.SALE_CONFIG.SECRET_KEY, { id: parseInt(saleId, 10), date: saleDate, code: saleCode, quantity: saleAmount, price: salePrice, remarks: salePurpose });
-    popupHandler.closePopup();
-}
-
-export function deleteProdFromStorage() {
-    const params = parseURLParams();
-    localStorageHandler.deleteFromStorage(config.SALE_CONFIG.SECRET_KEY, params["sale-id"]);
+export function deleteSaleFromStorage() {
+    const targetValue = utils.getPrimaryKeyValueFromQueryString(config.SALE_CONFIG.PRIMARY_KEY);
+    localStorageHandler.deleteFromStorage(config.SALE_CONFIG.SECRET_KEY, config.SALE_CONFIG.PRIMARY_KEY, targetValue);
     popupHandler.closePopup();
 }
 

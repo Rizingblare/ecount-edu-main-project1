@@ -18,9 +18,9 @@ export function isEmptyDTO(dto) {
 }
 
 
-export function getIdFromQueryString() {
+export function getPrimaryKeyValueFromQueryString(PK) {
     const urlParams = new URLSearchParams(window.location.search);
-    return parseInt(urlParams.get('id'));
+    return parseInt(urlParams.get(PK));
 }
 
 

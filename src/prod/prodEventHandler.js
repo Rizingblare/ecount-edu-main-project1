@@ -1,6 +1,4 @@
 import * as config from '../config/config.js';
-import { ALERT_EVENT_MESSAGES } from '../config/messageConstants.js';
-
 import * as utils from '../utils/utils.js';
 import * as pagingHandler from '../utils/pagingHandler.js';
 import * as popupHandler from '../utils/popupHandler.js';
