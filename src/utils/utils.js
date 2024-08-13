@@ -20,7 +20,7 @@ export function isEmptyDTO(dto) {
 
 export function getIdFromQueryString() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id');
+    return parseInt(urlParams.get('id'));
 }
 
 
@@ -39,7 +39,7 @@ export function parseURLParams(urlInfos) {
 export function parseDateString(dateString) {
     const year = dateString.substring(0, 4);
     const month = dateString.substring(5, 7);
-    const day = dateString.substring(8, 10);
+    const day = dateString.substring(8);
     
     return [year, month, day];
 }

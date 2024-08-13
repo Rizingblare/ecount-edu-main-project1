@@ -4,8 +4,6 @@ import * as localStorageHandler from "../../utils/localStorageHandler.js";
 import * as selectedProdHandler from '../../prod/selectedProdHandler.js';
 
 import * as config from "../../config/config.js";
-import { DTOFactory } from "../../model/DTOFactory.js";
-import { SaleState } from "../../model/SaleDTO.js";
 
 export function init(pageState) {
     utils.allformsPreventSubmit();
@@ -25,7 +23,8 @@ export function loadParams() {
 
     const prodDTOs = [{
         prodName: params["prodName"],
-        prodCode: params["prodCode"]
+        prodCode: params["prodCode"],
+        price: params["price"]
     }];
 
     selectedProdHandler.generateSelectedProdItemElement(prodDTOs);
@@ -42,22 +41,34 @@ export function loadParams() {
 
 export function submitToStorage(pageState) {
     const formData = new FormData(document.querySelector('form'));
-    
-    const saleEditDTO = DTOFactory.createSaleDTO();
-        
-    saleEditDTO.builder()
-        .setId(pageState.hasQueryString ? utils.getIdFromQueryString() : localStorageHandler.getNextId())
-        .setDateDt(formData.get('data_dt'))
-        .setDateNo(pageState.hasQueryString ? utils.getIdFromQueryString() : localStorageHandler.getNextId())
-        .setProdCode(formData.get('prodCode'))
-        .setQuantity(formData.get('quantity'))
-        .setPrice(formData.get('price'))
-        .setRemarks(formData.get('remarks'))
-        .build();
 
-    if (!saleEditDTO.validate()) return;
-    
-    localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, saleEditDTO);
+    var saleEditInputDTO;
+    if (pageState.hasQueryString) {
+       saleEditInputDTO = {
+            id: utils.getIdFromQueryString(),
+            date_dt: formData.get('data_dt').substring(0, 10),
+            date_no: parseInt(formData.get('data_dt').substring(11)),
+            prodCode: document.querySelector('.selectedProdItem').dataset.prodCode,
+            prodName: document.querySelector('.selectedProdItem').dataset.prodName,
+            quantity: parseInt(formData.get('quantity')),
+            price: parseInt(formData.get('price')),
+            remarks: formData.get('remarks')
+        };
+        localStorageHandler.updateInStorage(config.SALE_CONFIG.SECRET_KEY, 'id', saleEditInputDTO);
+    }
+    else {
+        saleEditInputDTO = {
+            id: localStorageHandler.getNextId(),
+            date_dt: formData.get('data_dt'),
+            date_no: localStorageHandler.getNextId(),
+            prodCode: document.querySelector('.selectedProdItem').dataset.prodCode,
+            prodName: document.querySelector('.selectedProdItem').dataset.prodName,
+            quantity: parseInt(formData.get('quantity')),
+            price: parseInt(formData.get('price')),
+            remarks: formData.get('remarks')
+        };
+        localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, saleEditInputDTO);
+    }
     popupHandler.closePopup();
 }
 

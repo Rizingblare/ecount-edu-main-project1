@@ -67,5 +67,3 @@ export class SaleDTO {
         return Builder;
     }
 }
-
-export const SingtonSaleState = SaleDTO();

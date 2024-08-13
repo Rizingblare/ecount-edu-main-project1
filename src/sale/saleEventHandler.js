@@ -7,7 +7,10 @@ import * as config from '../config/config.js';
 
 
 export function init() {
+    //localStorage.clear();
     utils.allformsPreventSubmit();
+
+    console.log("now", loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
     pagingHandler.renderItems(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
     pagingHandler.registerPaginationEvents(generateSaleItemElement, loadFromStorage(config.SALE_CONFIG.SECRET_KEY));
 }
@@ -15,6 +18,7 @@ export function init() {
 function generateSaleItemElement(saleItem) {
     const saleElement = document.createElement('tr');
     const [saleYear, saleMonth, saleDay] = utils.parseDateString(saleItem.data_dt);
+    saleElement.dataset.id = saleItem.id;
     saleElement.dataset.data_dt = saleItem.data_dt;
     saleElement.dataset.data_no = saleItem.data_no;
     saleElement.dataset.prodCode = saleItem.prodCode;
@@ -45,17 +49,18 @@ export function handleSaleEditPopupLink(event) {
     const target = event.target.closest('.editLink');
     
     if (target) {
-        const prodElement = target.closest('tr');
-        const toProdEditDTO = {
-            data_dt: prodElement.dataset.data_dt,
-            data_no: prodElement.dataset.data_no,
-            prodCode: prodElement.dataset.prodCode,
-            prodName: prodElement.dataset.prodName,
-            quantity: prodElement.dataset.quantity,
-            price: prodElement.dataset.price,
-            remarks: prodElement.dataset.remarks
+        const saleElement = target.closest('tr');
+        const saleEditDTO = {
+            id: saleElement.dataset.id,
+            data_dt: saleElement.dataset.data_dt,
+            data_no: saleElement.dataset.data_no,
+            prodCode: saleElement.dataset.prodCode,
+            prodName: saleElement.dataset.prodName,
+            quantity: saleElement.dataset.quantity,
+            price: saleElement.dataset.price,
+            remarks: saleElement.dataset.remarks
         };
-        popupHandler.openPopup(config.URL.SALE_EDIT, toProdEditDTO);
+        popupHandler.openPopup(config.URL.SALE_EDIT, saleEditDTO);
     }
 }
 

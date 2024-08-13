@@ -1,3 +1,5 @@
+import { URL } from "../config/config.js";
+
 export function updateSelectedProds(event) {
     const selectedProdItemsDTO = event.data.selectedProdItemsDTO;
     if (selectedProdItemsDTO && selectedProdItemsDTO.length > 0) {
@@ -13,21 +15,31 @@ export function generateSelectedProdItemElement(prodDTOs) {
         selectedProdElement.textContent = prodDTO["prodName"] + '(' + prodDTO["prodCode"] + ') [X]';
         selectedProdElement.dataset.prodCode = prodDTO["prodCode"];
         selectedProdElement.dataset.prodName = prodDTO["prodName"];
+        selectedProdElement.dataset.price = prodDTO["price"];
         selectedProdElement.classList.add('selectedProdItem');
         selectedProdElement.onclick = function() {
             container.removeChild(selectedProdElement);
         }
         container.appendChild(selectedProdElement);
     });
+    if (window.location.href.includes(URL.SALE_EDIT)) {
+        updatePriceFormValue();
+    }
 }
 
+function updatePriceFormValue() {
+    const selectedProdItem = document.querySelector('.selectedProdItem');
+    const priceInput = document.querySelector('input[name="price"]');
+    priceInput.value = selectedProdItem.dataset.price;
+}
 
 export function submitProdItemByLink(target) {
     const prodElement = target.closest('tr');
 
     const selectedProdDTO = {
         prodCode: prodElement.dataset.prodCode,
-        prodName: prodElement.dataset.prodName
+        prodName: prodElement.dataset.prodName,
+        price: prodElement.dataset.price
     };
 
     if (window.opener) {
@@ -47,7 +59,8 @@ export function submitProdItemsByBtn() {
             const prodElement = checkbox.closest('.item');
             return {
                 prodCode: prodElement.dataset.prodCode,
-                prodName: prodElement.dataset.prodName
+                prodName: prodElement.dataset.prodName,
+                price: prodElement.dataset.price
             };
         });
     if (selectedProdItemsDTO.length === 0) {
