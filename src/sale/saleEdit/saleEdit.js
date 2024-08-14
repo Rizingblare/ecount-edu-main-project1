@@ -36,6 +36,7 @@ function registerMessageEvent() {
 
 function registerSubmitEvent(pageState) {
     const submitBtn = document.querySelector('.submitBtn');
+    submitBtn.textContent = pageState.hasQueryString ? '수정' : '등록';
     submitBtn.addEventListener('click', function() {
         saleEditHandler.submitSaleToStorage(pageState);
     });
