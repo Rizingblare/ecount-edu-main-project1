@@ -17,8 +17,8 @@ export function loadFromStorage(storageKey) {
         return JSON.parse(storedItems);
     }
     else {
-        const addedDummysID = dummys[storageKey].map((item, index) => ({
-            id: index + 1,
+        const addedDummysID = dummys[storageKey].map((item) => ({
+            id: getNextId(),
             ...item
         }));
         saveToStorage(storageKey, addedDummysID);
@@ -28,8 +28,9 @@ export function loadFromStorage(storageKey) {
 
 export function addToStorage(storageKey, newValue) {
     let values = loadFromStorage(storageKey);
-    newValue.id = getNextId();
+    //newValue.id = getNextId();
     values.push(newValue);
+    console.log(newValue);
     saveToStorage(storageKey, values);
     window.alert(SUCCESS_MESSAGES.SUCCESS_TO_SAVE);
 }

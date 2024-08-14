@@ -5,34 +5,29 @@ document.addEventListener('DOMContentLoaded', function() {
     const pageState = popupHandler.initializePageState();
     prodEditHandler.init(pageState);
     
-    if (pageState.hasQueryString) {
-        registerSubmitEvent(true);
-        registerDeleteEvent();
-        registerResetEvent(true);
-        registerCloseEvent();
-    }
+    registerSubmitEvent(pageState);
+    registerResetEvent(pageState);
 
-    else {
-        registerSubmitEvent();
-        registerResetEvent();
-        registerCloseEvent();        
+    if (pageState.hasQueryString) {
+        registerDeleteEvent();
     }
+    
+    registerCloseEvent();
 })
 
-function registerSubmitEvent(isEdit) {
+function registerSubmitEvent(pageState) {
     const submitBtn = document.querySelector('.submitBtn');
-    if (!isEdit) {
-        submitBtn.addEventListener('click', function() {
-            prodEditHandler.addProdToStorage();
-        });
-    }
-    else {
-        submitBtn.addEventListener('click', function() {
-            prodEditHandler.editProdToStorage();
-        });
-    }
+    submitBtn.addEventListener('click', function() {
+        prodEditHandler.submitProdToStorage(pageState);
+    });
 }
 
+function registerResetEvent(pageState) {
+    const resetBtn = document.querySelector('.resetBtn');
+    resetBtn.addEventListener('click', function() {
+        prodEditHandler.resetWindowForm(pageState);
+    });
+}
 
 function registerDeleteEvent() {
     const deleteBtnArea = document.getElementById('deleteBtnArea');
@@ -46,16 +41,9 @@ function registerDeleteEvent() {
     });
 }
 
-function registerResetEvent(isEdit) {
-    const resetBtn = document.querySelector('.resetBtn');
-    resetBtn.addEventListener('click', function() {
-        prodEditHandler.resetWindowForm(isEdit);
-    });
-}
-
 function registerCloseEvent() {
     const closeBtn = document.querySelector('.closeBtn');
     closeBtn.addEventListener('click', function() {
-        prodEditHandler.closeWindowPopup();
+        popupHandler.closePopup();
     });
 }

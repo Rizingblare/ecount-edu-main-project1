@@ -1,8 +1,8 @@
 import * as utils from '../../utils/utils.js';
+import * as config from '../../config/config.js';
+import * as popupHandler from '../../utils/popupHandler.js';
 import * as localStorageHandler from '../../utils/localStorageHandler.js';
 
-import * as config from '../../config/config.js';
-import { ALERT_INPUT_MESSAGES } from '../../config/messageConstants.js';
 
 export function init(pageState) {
     utils.allformsPreventSubmit();
@@ -21,61 +21,50 @@ export function loadParams() {
 
     const prodNameInput = document.querySelector('input[name="prodName"]');
     prodNameInput.value = params["prodName"];
+
+    const priceInput = document.querySelector('input[name="price"]');
+    priceInput.value = params["price"];
 }
 
-export function addProdToStorage() {
+export function submitProdToStorage(pageState) {
     const formData = new FormData(document.querySelector('form'));
-    const prodCode = formData.get('prodCode');
-    const prodName = formData.get('prodName');
-    
-    if (!prodCode.trim() || !prodName.trim()) {
-        alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
-        return;
+    var prodEditInputDTO;
+    if (pageState.hasQueryString) {
+       prodEditInputDTO = {
+            id: utils.getPrimaryKeyValueFromQueryString(config.PROD_CONFIG.PRIMARY_KEY),
+            prodCode: formData.get('prodCode'),
+            prodName: formData.get('prodName'),
+            price: parseInt(formData.get('price'))
+        };
+        localStorageHandler.updateInStorage(config.PROD_CONFIG.SECRET_KEY, config.PROD_CONFIG.PRIMARY_KEY, prodEditInputDTO);
     }
-
-    const newProd = {
-        id: localStorageHandler.getNextId(),
-        prodCode: prodCode,
-        prodName: prodName
-    };
-    
-    localStorageHandler.addToStorage(config.PROD_CONFIG.SECRET_KEY, newProd);
-    closeWindowPopup();
-}
-
-export function editProdToStorage() {
-    const formData = new FormData(document.querySelector('form'));
-    const prodCode = formData.get('prodCode');
-    const prodName = formData.get('prodName');
-
-    if (!prodCode.trim() || !prodName.trim()) {
-        alert(ALERT_INPUT_MESSAGES.EMPTY_INPUT);
-        return;
+    else {
+        prodEditInputDTO = {
+            id: localStorageHandler.getNextId(),
+            prodCode: formData.get('prodCode'),
+            prodName: formData.get('prodName'),
+            price: parseInt(formData.get('price'))
+        };
+        localStorageHandler.addToStorage(config.PROD_CONFIG.SECRET_KEY, prodEditInputDTO);
     }
-
-    localStorageHandler.updateInStorage(config.PROD_CONFIG.SECRET_KEY, 'prodCode', { proCode: prodCode, prodName: prodName });
-    closeWindowPopup();
+    popupHandler.closePopup();
 }
 
 export function deleteProdFromStorage() {
-    const params = utils.parseURLParams(window.location.search);
-    localStorageHandler.deleteFromStorage(config.PROD_CONFIG.SECRET_KEY, 'prodCode');
-    closeWindowPopup();
+    const targetValue = utils.getPrimaryKeyValueFromQueryString(config.PROD_CONFIG.PRIMARY_KEY);
+    localStorageHandler.deleteFromStorage(config.PROD_CONFIG.SECRET_KEY, config.PROD_CONFIG.PRIMARY_KEY, targetValue);
+    popupHandler.closePopup();
 }
 
-export function resetWindowForm(isEdit) {
+export function resetProdFormData(pageState) {
+    if (pageState.hasQueryString) {
+        loadParams();
+        return;
+    }
+
     const prodCodeInput = document.querySelector('input[name="prodCode"]');
     prodCodeInput.value = '';
 
     const prodNameInput = document.querySelector('input[name="prodName"]');
     prodNameInput.value = '';
-
-    if (isEdit) {
-        loadParams();
-    }
-}
-
-export function closeWindowPopup() {
-    window.close();
-    if (window.opener) window.opener.location.reload();
 }

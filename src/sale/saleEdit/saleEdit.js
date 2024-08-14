@@ -11,11 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
     registerMessageEvent();
     registerSubmitEvent(pageState);
     registerResetEvent(pageState);
-    registerCloseEvent();
     
     if (pageState.hasQueryString) {
         registerDeleteEvent();
     }
+    
+    registerCloseEvent();
 })
 
 function registerSearchProdPopupEvent() {

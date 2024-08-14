@@ -5,6 +5,7 @@ import * as popupHandler from '../utils/popupHandler.js';
 import { loadFromStorage } from '../utils/localStorageHandler.js';
 
 export function init() {
+    //localStorage.clear();
     utils.allformsPreventSubmit();
     pagingHandler.renderItems(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.SECRET_KEY));
     pagingHandler.registerPaginationEvents(generateProdItemElement, loadFromStorage(config.PROD_CONFIG.SECRET_KEY));
@@ -12,6 +13,7 @@ export function init() {
 
 function generateProdItemElement(prodItem) {
     const prodElement = document.createElement('tr');
+    prodElement.dataset.id = prodItem.id;
     prodElement.dataset.prodCode = prodItem.prodCode;
     prodElement.dataset.prodName = prodItem.prodName;
     prodElement.dataset.price = prodItem.price;
@@ -42,6 +44,7 @@ export function handleProdEditPopupLink(event) {
     if (target) {
         const prodElement = target.closest('tr');
         const prodEditDTO = {
+            id: prodElement.dataset.id,
             prodCode: prodElement.dataset.prodCode,
             prodName: prodElement.dataset.prodName,
             price: prodElement.dataset.price

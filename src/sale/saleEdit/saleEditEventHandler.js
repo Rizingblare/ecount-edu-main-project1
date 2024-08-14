@@ -67,7 +67,7 @@ export function submitSaleToStorage(pageState) {
             price: parseInt(formData.get('price')),
             remarks: formData.get('remarks')
         };
-        localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, config.SALE_CONFIG.PRIMARY_KEY, saleEditInputDTO);
+        localStorageHandler.addToStorage(config.SALE_CONFIG.SECRET_KEY, saleEditInputDTO);
     }
     popupHandler.closePopup();
 }
@@ -78,10 +78,9 @@ export function deleteSaleFromStorage() {
     popupHandler.closePopup();
 }
 
-export function resetSaleFormData(isEdit) {
-    const urlParams = window.location.search;
-    if (isEdit) {
-        loadParams(urlParams);
+export function resetSaleFormData(pageState) {
+    if (pageState.hasQueryString) {
+        loadParams();
         return;
     }
 
